@@ -5,31 +5,59 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+# temporary shim to adjust import paths for running this script directly
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from config import HTML_DIR, RAW_DIR, YEAR_END, YEAR_START
 
-BASE_URL = "https://en.wikipedia.org/wiki/{year}_in_film"
+
+FILM_URL = "https://en.wikipedia.org/wiki/{year}_in_film"
+MUSIC_URL = "https://en.wikipedia.org/wiki/{year}_in_music"
+BILLBOARD_URL = "https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_{year}"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 }
 
 
-def cached_html_path(year: int) -> Path:
+def cached_film_path(year: int) -> Path:
     return HTML_DIR / f"{year}_in_film.html"
 
 
-def fetch_page(year: int) -> str:
-    """Download the Wikipedia page for the given year with a browser-like user agent and cache HTML locally."""
-    HTML_DIR.mkdir(parents=True, exist_ok=True)
-    cached = cached_html_path(year)
-    if cached.exists():
-        return cached.read_text(encoding="utf-8")
+def cached_music_path(year: int) -> Path:
+    return HTML_DIR / f"{year}_in_music.html"
 
-    url = BASE_URL.format(year=year)
+
+def cached_billboard_path(year: int) -> Path:
+    return HTML_DIR / f"billboard_hot_100_{year}.html"
+
+
+def fetch_with_cache(url: str, cache_path: Path) -> str:
+    HTML_DIR.mkdir(parents=True, exist_ok=True)
+    if cache_path.exists():
+        return cache_path.read_text(encoding="utf-8")
     resp = requests.get(url, headers=HEADERS, timeout=15)
     resp.raise_for_status()
     html = resp.text
-    cached.write_text(html, encoding=resp.encoding or "utf-8")
+    cache_path.write_text(html, encoding=resp.encoding or "utf-8")
     return html
+
+
+def fetch_film_page(year: int) -> str:
+    """Download the Wikipedia page for the given year with a browser-like user agent and cache HTML locally."""
+    url = FILM_URL.format(year=year)
+    return fetch_with_cache(url, cached_film_path(year))
+
+
+def fetch_music_page(year: int) -> str:
+    url = MUSIC_URL.format(year=year)
+    return fetch_with_cache(url, cached_music_path(year))
+
+
+def fetch_billboard_page(year: int) -> str:
+    url = BILLBOARD_URL.format(year=year)
+    return fetch_with_cache(url, cached_billboard_path(year))
 
 
 def _section_tables(html: str, keyword: str):
@@ -50,7 +78,7 @@ def _section_tables(html: str, keyword: str):
 
 
 def parse_html_table(table) -> pd.DataFrame:
-    """Parse an HTML table into a DataFrame handling rowspan/colspan with BeautifulSoup only."""
+    """Parse an HTML table into a DataFrame."""
     rows = table.find_all("tr")
     if not rows:
         return pd.DataFrame()
@@ -103,8 +131,8 @@ def parse_html_table(table) -> pd.DataFrame:
 
 
 def scrape_highest_grossing(year: int) -> pd.DataFrame:
-    """Scrape the first Highest-grossing films table for a given year."""
-    html = fetch_page(year)
+    """Scrape the highest-grossing films table for a given year."""
+    html = fetch_film_page(year)
     tables = _section_tables(html, "highest-grossing")
     if not tables:
         return pd.DataFrame()
@@ -127,8 +155,8 @@ def scrape_highest_grossing(year: int) -> pd.DataFrame:
 
 
 def scrape_awards(year: int) -> pd.DataFrame:
-    """Scrape Awards tables for a given year, keeping only category/org + Academy Awards columns."""
-    html = fetch_page(year)
+    """Scrape awards tables for a given year, keeping only category/org + Academy Awards columns."""
+    html = fetch_film_page(year)
     tables = _section_tables(html, "awards")
     if not tables:
         return pd.DataFrame()
@@ -163,8 +191,55 @@ def scrape_awards(year: int) -> pd.DataFrame:
     return df
 
 
-def scrape_range(year_start: int = 1985, year_end: int = 2015):
-    """Scrape Highest-grossing and Awards tables across a year range and persist CSVs."""
+def scrape_top_hits(year: int) -> pd.DataFrame:
+    """
+    Scrape biggest hit singles for the given year.
+    1985-2000: use {year}_in_music page, "Biggest hit singles" section.
+    2001+: use Billboard Year-End Hot 100 page.
+    """
+    desired_cols = ["rank", "artist", "title"]
+
+    if year <= 2000:
+        html = fetch_music_page(year)
+        tables = _section_tables(html, "biggest hit singles")
+        if not tables:
+            return pd.DataFrame()
+        df = parse_html_table(tables[0]).iloc[:, :3]
+        rename_map = {df.columns[i]: desired_cols[i] for i in range(min(len(df.columns), len(desired_cols)))}
+        df = df.rename(columns=rename_map)
+    else:
+        html = fetch_billboard_page(year)
+        soup = BeautifulSoup(html, "html.parser")
+        tables = _section_tables(html, "list") or soup.find_all("table")
+        table = None
+        for t in tables:
+            header_text = " ".join([h.get_text(" ", strip=True).lower() for h in t.find_all("th")])
+            if any(key in header_text for key in ["title", "artist", "no", "№"]):
+                table = t
+                break
+        if table is None:
+            return pd.DataFrame()
+        df = parse_html_table(table).iloc[:, :3]
+        rename_map = {}
+        if len(df.columns) >= 1:
+            rename_map[df.columns[0]] = "rank"
+        if len(df.columns) >= 2:
+            rename_map[df.columns[1]] = "title"
+        if len(df.columns) >= 3:
+            rename_map[df.columns[2]] = "artist"
+        df = df.rename(columns=rename_map)
+        df = df[["rank", "artist", "title"]] if "artist" in df.columns else df
+
+    for col in desired_cols:
+        if col not in df.columns:
+            df[col] = None
+    df = df[desired_cols]
+    df["year"] = year
+    return df
+
+
+def scrape_films_range(year_start: int = 1985, year_end: int = 2015):
+    """Scrape highest-grossing and awards tables across a year range and persist CSVs."""
     hg_frames = []
     awards_frames = []
 
@@ -189,8 +264,23 @@ def scrape_range(year_start: int = 1985, year_end: int = 2015):
     return highest, awards
 
 
+def scrape_music_range(year_start: int = 1985, year_end: int = 2015):
+    """Scrape top hits across a year range and persist a CSV."""
+    frames = []
+    for year in range(year_start, year_end + 1):
+        df = scrape_top_hits(year)
+        if not df.empty:
+            frames.append(df)
+    hits = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if not hits.empty:
+        RAW_DIR.mkdir(parents=True, exist_ok=True)
+        hits.to_csv(RAW_DIR / "top_hits.csv", index=False)
+    return hits
+
+
 def main():
-    scrape_range(YEAR_START, YEAR_END)
+    scrape_films_range(YEAR_START, YEAR_END)
+    scrape_music_range(YEAR_START, YEAR_END)
 
 
 if __name__ == "__main__":
