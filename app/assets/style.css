@@ -1,0 +1,144 @@
+
+/* Import retrowave font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+/* Apply to entire app */
+.stApp, .stApp * {
+font-family: 'Orbitron', sans-serif;
+}
+/* Background GIF/Image */
+.stApp {
+background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWF4Z3dpdmQ2ZXl4c2t5NnVyYjZ4dGx5aGlncTB3bjZwZ21qcWo2NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9Igqq02d80wIqUpy/giphy.gif');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+}
+
+/* Optional: Add overlay to make text more readable */
+.stApp::before {
+content: "";
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.6);
+z-index: -1;
+}
+
+.rewind-title {
+font-size: 2.2rem; 
+font-weight: 900; 
+letter-spacing: 3px;
+position: fixed;
+top: 60px;
+left: 20px;
+z-index: 1000;
+margin: 0;
+text-transform: uppercase;
+
+/* Chrome metallic gradient - white to purple */
+background: linear-gradient(
+to bottom,
+#00FFFF 0%,
+#33CCFF 20%,
+#6699FF 35%,
+#9D4EDD 50%,
+#8B3FD9 65%,
+#7B2CBF 80%,
+#240046 100%
+);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+
+/* Chrome border effect */
+-webkit-text-stroke: 2px #00FFFF;
+
+/* Neon glow */
+filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.6))
+        drop-shadow(0 0 20px rgba(183, 148, 244, 0.4))
+        drop-shadow(0 0 30px rgba(157, 78, 221, 0.3));
+}
+.rewind-sub {opacity: 0.75; margin-top: -8px;}
+.card {
+border: 1px solid rgba(255,255,255,0.12);
+border-radius: 18px;
+padding: 18px 18px;
+background: rgba(255,255,255,0.03);
+box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+backdrop-filter: blur(10px);
+}
+.label {opacity: 0.7; font-size: 0.9rem; margin-bottom: 4px;}
+.value {font-size: 1.2rem; font-weight: 700; line-height: 1.35;}
+.trend {font-size: 1.1rem; font-weight: 650;}
+.pill {
+display: inline-block;
+padding: 6px 10px;
+border-radius: 999px;
+background: rgba(255,255,255,0.08);
+border: 1px solid rgba(255,255,255,0.10);
+font-size: 0.9rem;
+}
+.year-display {
+text-align: center;
+font-size: 3rem;
+font-weight: 900;
+letter-spacing: -1px;
+margin: 0;
+padding: 0;
+line-height: 1;
+color: #B794F4;
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100%;
+}
+
+
+/* Arrow button images - no border */
+.stButton button[data-testid*="prev"],
+.stButton button[data-testid*="next"] {
+  background-image: url('assets/arrow_left.png'); /* Will be overridden for next */
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: transparent;
+  font-size: 0;
+  min-height: 60px;
+  border: none;
+  background-color: transparent;
+}
+
+.stButton button[data-testid*="next"] {
+  background-image: url('assets/arrow_right.png');
+}
+
+/* Keep only hover effects */
+.stButton button[data-testid*="prev"]:hover,
+.stButton button[data-testid*="next"]:hover {
+  border: none;
+  background-color: transparent;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(183, 148, 244, 0.3);
+}
+
+.stButton button[data-testid*="prev"]:active,
+.stButton button[data-testid*="next"]:active {
+  transform: scale(0.95);
+}
+
+/* Style for primary button (Rewind) */
+.stButton button[kind="primary"] {
+background: transparent;
+border: 2px solid rgba(183, 148, 244, 0.6);
+font-weight: 600;
+color: #D4BBFF;
+}
+
+.stButton button[kind="primary"]:hover {
+background: rgba(183, 148, 244, 0.15);
+border-color: rgba(183, 148, 244, 0.9);
+box-shadow: 0 6px 20px rgba(183, 148, 244, 0.4);
+}
