@@ -97,36 +97,27 @@ height: 100%;
 }
 
 
-/* Arrow button images - no border */
-.stButton button[data-testid*="prev"],
-.stButton button[data-testid*="next"] {
-  background-image: url('assets/arrow_left.png'); /* Will be overridden for next */
-  background-size: 50%;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: transparent;
-  font-size: 0;
-  min-height: 60px;
-  border: none;
-  background-color: transparent;
+/* Triangle navigation buttons */
+.stButton button {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #D4BBFF;
+  background: transparent;
+  border: 2px solid rgba(183, 148, 244, 0.6);
+  border-radius: 10px;
+  height: 60px;
+  box-shadow: 0 3px 10px rgba(183, 148, 244, 0.2);
 }
 
-.stButton button[data-testid*="next"] {
-  background-image: url('assets/arrow_right.png');
-}
-
-/* Keep only hover effects */
-.stButton button[data-testid*="prev"]:hover,
-.stButton button[data-testid*="next"]:hover {
-  border: none;
-  background-color: transparent;
+.stButton button:hover {
+  background: rgba(183, 148, 244, 0.15);
+  border-color: rgba(183, 148, 244, 0.9);
+  box-shadow: 0 4px 15px rgba(183, 148, 244, 0.3);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(183, 148, 244, 0.3);
 }
 
-.stButton button[data-testid*="prev"]:active,
-.stButton button[data-testid*="next"]:active {
-  transform: scale(0.95);
+.stButton button:active {
+  transform: scale(0.98);
 }
 
 /* Style for primary button (Rewind) */

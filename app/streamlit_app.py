@@ -36,13 +36,13 @@ st.write("")
 col1, col2, col3 = st.columns([1, 3, 1])
 
 with col1:
-    if st.button("⏪", use_container_width=True):
+    if st.button("◄", key="prev", use_container_width=True):
         st.session_state.current_year_index = min(
             st.session_state.current_year_index + 1, len(years_desc) - 1
         )
         st.session_state.reveal = False
         st.rerun()
-
+    
 with col2:
     current_year = years_desc[st.session_state.current_year_index]
     st.markdown(
@@ -51,13 +51,13 @@ with col2:
     )
 
 with col3:
-    if st.button("⏩", use_container_width=True):
+    if st.button("►", key="next", use_container_width=True):
         st.session_state.current_year_index = max(
             st.session_state.current_year_index - 1, 0
         )
         st.session_state.reveal = False
         st.rerun()
-
+        
 # ---------- Get current data ----------
 year = years_desc[st.session_state.current_year_index]
 row = df[df["year"] == year].iloc[0]
