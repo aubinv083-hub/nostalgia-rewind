@@ -1,9 +1,15 @@
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 import time
 from pathlib import Path
 
 st.set_page_config(page_title="Nostalgia Rewind", page_icon="⏪", layout="centered")
+
+#LOAD DEPENDENCIES
+
+space_invader_path = Path(__file__).resolve().parent / "assets" / "space_invader.html"
+space_invader_html = space_invader_path.read_text(encoding="utf-8")
 
 css_path = Path(__file__).resolve().parent / "assets" / "style.css"
 st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
@@ -57,7 +63,7 @@ with col3:
         )
         st.session_state.reveal = False
         st.rerun()
-        
+
 # ---------- Get current data ----------
 year = years_desc[st.session_state.current_year_index]
 row = df[df["year"] == year].iloc[0]
@@ -110,3 +116,5 @@ if st.session_state.reveal:
 
 else:
     st.caption("Navigate with arrows, then reveal your rewind.")
+
+components.html(space_invader_html, height=700, scrolling=False)

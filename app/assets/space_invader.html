@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { margin:0; background:#000; }
+    canvas { display:block; margin:auto; background:#000; }
+  </style>
+</head>
+<body>
+<canvas id="c" width="480" height="640"></canvas>
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+let left=false,right=false,shoot=false;
+document.addEventListener("keydown", e=>{
+  if(e.key==="ArrowLeft") left=true;
+  if(e.key==="ArrowRight") right=true;
+  if(e.key===" " ) shoot=true;
+});
+document.addEventListener("keyup", e=>{
+  if(e.key==="ArrowLeft") left=false;
+  if(e.key==="ArrowRight") right=false;
+  if(e.key===" " ) shoot=false;
+});
+
+let player={x:240,y:600,w:40,h:10,v:5};
+let bullets=[];
+let enemies=[...Array(6)].map((_,r)=>[...Array(8)].map((_,c)=>({x:60+c*45,y:60+r*35,alive:true}))).flat();
+let enemyDir=1;
+let lastShot=0;
+
+function step(t){
+  // move player
+  if(left) player.x-=player.v;
+  if(right) player.x+=player.v;
+  player.x=Math.max(player.w/2, Math.min(canvas.width-player.w/2, player.x));
+
+  // shoot
+  if(shoot && t-lastShot>200){
+    bullets.push({x:player.x,y:player.y-10,vy:-8});
+    lastShot=t;
+  }
+
+  // move bullets
+  bullets.forEach(b=>b.y+=b.vy);
+  bullets=bullets.filter(b=>b.y>-20);
+
+  // move enemies (simple wave)
+  let minX=1e9,maxX=-1e9;
+  enemies.filter(e=>e.alive).forEach(e=>{minX=Math.min(minX,e.x);maxX=Math.max(maxX,e.x);});
+  if(minX<20 && enemyDir<0) enemyDir=1;
+  if(maxX>canvas.width-20 && enemyDir>0) enemyDir=-1;
+  enemies.filter(e=>e.alive).forEach(e=>e.x+=enemyDir*1.2);
+
+  // collisions
+  bullets.forEach(b=>{
+    enemies.forEach(e=>{
+      if(!e.alive) return;
+      if(Math.abs(b.x-e.x)<18 && Math.abs(b.y-e.y)<12){
+        e.alive=false;
+        b.y=-999; // remove
+      }
+    });
+  });
+
+  // draw
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // player
+  ctx.fillStyle="#0f0";
+  ctx.fillRect(player.x-player.w/2, player.y-player.h/2, player.w, player.h);
+
+  // bullets
+  ctx.fillStyle="#fff";
+  bullets.forEach(b=>ctx.fillRect(b.x-2,b.y-8,4,10));
+
+  // enemies
+  ctx.fillStyle="#f0f";
+  enemies.filter(e=>e.alive).forEach(e=>ctx.fillRect(e.x-14,e.y-10,28,20));
+
+  // win text
+  if(enemies.every(e=>!e.alive)){
+    ctx.fillStyle="#fff";
+    ctx.font="24px sans-serif";
+    ctx.fillText("You win!", 180, 320);
+  } else {
+    requestAnimationFrame(step);
+  }
+}
+
+requestAnimationFrame(step);
+</script>
+</body>
+</html>
+"""
