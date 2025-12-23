@@ -11,6 +11,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from config import HTML_DIR, RAW_DIR, YEAR_END, YEAR_START
+from src.io_utils import ensure_data_dirs
 
 
 FILM_URL = "https://en.wikipedia.org/wiki/{year}_in_film"
@@ -279,6 +280,7 @@ def scrape_music_range(year_start: int = 1985, year_end: int = 2015):
 
 
 def main():
+    ensure_data_dirs()
     scrape_films_range(YEAR_START, YEAR_END)
     scrape_music_range(YEAR_START, YEAR_END)
 
