@@ -120,7 +120,7 @@ height: 100%;
   transform: scale(0.98);
 }
 
-/* Style for primary button (Rewind) */
+/* Style for primary button */
 .stButton button[kind="primary"] {
 background: transparent;
 border: 2px solid rgba(183, 148, 244, 0.6);

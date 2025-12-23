@@ -55,7 +55,7 @@ with col3:
 
 # ---------- Reveal button ----------
 st.write("")
-if st.button("⏮️ REWIND ⏮️", type="primary", use_container_width=True):
+if st.button("⏮ REWIND ⏮", type="primary", use_container_width=True):
     st.session_state.reveal = True
 
 # ---------- Reveal section (placeholder) ----------
@@ -64,7 +64,7 @@ if st.session_state.reveal:
         time.sleep(0.6)
 
     year = years_desc[st.session_state.current_year_index]
-    st.markdown(f"Your {year} Rewind ✨")
+    st.markdown(f"Your {year} Rewind")
     st.write("")
 
     # TODO: Replace with teammate's data structure
@@ -106,4 +106,5 @@ else:
     st.caption("Navigate with arrows, then reveal your rewind.")
 
 # ---------- Game component ----------
+st.markdown('<div style="text-align: center;">Bored ? Help Tux destroy Bill Gates army !!</div>', unsafe_allow_html=True)
 components.html(html, height=700, scrolling=False)
