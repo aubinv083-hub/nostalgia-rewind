@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import re
 
 import pandas as pd
 import requests
@@ -10,13 +11,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from config import HTML_DIR, RAW_DIR, YEAR_END, YEAR_START
+from config import HTML_DIR, RAW_DIR, WIKI_ALBUM_YEARS, YEAR_END, YEAR_START
 from src.io_utils import ensure_data_dirs
 
 
 FILM_URL = "https://en.wikipedia.org/wiki/{year}_in_film"
 MUSIC_URL = "https://en.wikipedia.org/wiki/{year}_in_music"
-BILLBOARD_URL = "https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_{year}"
+SINGLES_BILLBOARD_URL = "https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_{year}"
+ALBUMS_BILLBOARD_URL = "https://en.wikipedia.org/wiki/List_of_Billboard_200_number-one_albums_of_{year}"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 }
@@ -30,8 +32,12 @@ def cached_music_path(year: int) -> Path:
     return HTML_DIR / f"{year}_in_music.html"
 
 
-def cached_billboard_path(year: int) -> Path:
+def cached_billboard_singles_path(year: int) -> Path:
     return HTML_DIR / f"billboard_hot_100_{year}.html"
+
+
+def cached_billboard_albums_path(year: int) -> Path:
+    return HTML_DIR / f"billboard_200_{year}.html"
 
 
 def fetch_with_cache(url: str, cache_path: Path) -> str:
@@ -56,9 +62,14 @@ def fetch_music_page(year: int) -> str:
     return fetch_with_cache(url, cached_music_path(year))
 
 
-def fetch_billboard_page(year: int) -> str:
-    url = BILLBOARD_URL.format(year=year)
-    return fetch_with_cache(url, cached_billboard_path(year))
+def fetch_billboard_singles_page(year: int) -> str:
+    url = SINGLES_BILLBOARD_URL.format(year=year)
+    return fetch_with_cache(url, cached_billboard_singles_path(year))
+
+
+def fetch_billboard_albums_page(year: int) -> str:
+    url = ALBUMS_BILLBOARD_URL.format(year=year)
+    return fetch_with_cache(url, cached_billboard_albums_path(year))
 
 
 def _section_tables(html: str, keyword: str):
@@ -192,6 +203,128 @@ def scrape_awards(year: int) -> pd.DataFrame:
     return df
 
 
+def scrape_wiki_albums(year: int) -> pd.DataFrame:
+    """
+    Scrape top albums from the {year}_in_music page.
+    Only available for specific years noted in config.WIKI_ALBUM_YEARS.
+    """
+    if year not in WIKI_ALBUM_YEARS:
+        return pd.DataFrame()
+
+    html = fetch_music_page(year)
+    soup = BeautifulSoup(html, "html.parser")
+    keywords = [
+        "top ten best albums",
+        "top 10 best albums",
+        "top best albums",
+        "best-selling albums globally",
+        "top 5 albums",
+    ]
+    heading = None
+    for h in soup.find_all(["h2", "h3"]):
+        title = h.get_text(" ", strip=True).lower()
+        if any(k in title for k in keywords):
+            heading = h
+            break
+    if heading is None:
+        return pd.DataFrame()
+
+    tables = []
+    lists = []
+    for sibling in heading.find_all_next():
+        if sibling.name in ("h2", "h3") and sibling is not heading:
+            break
+        if sibling.name == "table":
+            tables.append(sibling)
+        if sibling.name in ("ul", "ol"):
+            lists.append(sibling)
+
+    if tables:
+        df = parse_html_table(tables[0]).ffill()
+        col_map = {}
+        for col in df.columns:
+            c = str(col).lower()
+            if "position" in c:
+                col_map[col] = "rank"
+            elif "album" in c:
+                col_map[col] = "album"
+            elif "artist" in c:
+                col_map[col] = "artist"
+        df = df.rename(columns=col_map)
+        desired = ["rank", "artist", "album"]
+        for col in desired:
+            if col not in df.columns:
+                df[col] = None
+        df = df[desired]
+    elif lists:
+        items = []
+        rank = 1
+        for li in lists[0].find_all("li", recursive=False):
+            text = li.get_text(" ", strip=True)
+            text = re.sub(r"^\d+\.\s*", "", text)
+            artist, album = None, None
+            for sep in [" – ", " - ", "–", "-"]:
+                if sep in text:
+                    artist, album = text.split(sep, 1)
+                    break
+            if artist is None or album is None:
+                continue
+            items.append({"rank": rank, "artist": artist.strip(), "album": album.strip()})
+            rank += 1
+        df = pd.DataFrame(items)
+        if df.empty:
+            return df
+    else:
+        return pd.DataFrame()
+
+    df["year"] = year
+    return df[["rank", "artist", "album", "year"]]
+
+
+def scrape_billboard_albums(year: int) -> pd.DataFrame:
+    """Scrape Billboard 200 number-one albums list for a given year."""
+    html = fetch_billboard_albums_page(year)
+    soup = BeautifulSoup(html, "html.parser")
+    tables = (
+        _section_tables(html, "chart history")
+        or _section_tables(html, "number-ones")
+        or soup.find_all("table")
+    )
+    table = None
+    for t in tables:
+        header_text = " ".join(h.get_text(" ", strip=True).lower() for h in t.find_all("th"))
+        if any(key in header_text for key in ["issue", "date", "album", "artist"]):
+            table = t
+            break
+    if table is None:
+        return pd.DataFrame()
+
+    df = parse_html_table(table).ffill()
+    df = df[[col for col in df.columns if "ref" not in str(col).lower()]]
+    df = df.loc[:, ~pd.Index(df.columns).duplicated()]
+    col_map = {}
+    for col in df.columns:
+        c = str(col).lower()
+        if "date" in c:
+            col_map[col] = "date"
+        elif "album" in c:
+            col_map[col] = "album"
+        elif "artist" in c:
+            col_map[col] = "artist"
+        elif "label" in c:
+            col_map[col] = "label"
+        elif "sales" or "units" in c:
+            col_map[col] = "sales"
+    df = df.rename(columns=col_map)
+    desired = ["date", "album", "artist", "label", "sales"]
+    for col in desired:
+        if col not in df.columns:
+            df[col] = None
+    df = df[desired]
+    df["year"] = year
+    return df
+
+
 def scrape_top_hits(year: int) -> pd.DataFrame:
     """
     Scrape biggest hit singles for the given year.
@@ -209,7 +342,7 @@ def scrape_top_hits(year: int) -> pd.DataFrame:
         rename_map = {df.columns[i]: desired_cols[i] for i in range(min(len(df.columns), len(desired_cols)))}
         df = df.rename(columns=rename_map)
     else:
-        html = fetch_billboard_page(year)
+        html = fetch_billboard_singles_page(year)
         soup = BeautifulSoup(html, "html.parser")
         tables = _section_tables(html, "list") or soup.find_all("table")
         table = None
@@ -256,7 +389,6 @@ def scrape_films_range(year_start: int = 1985, year_end: int = 2015):
     highest = pd.concat(hg_frames, ignore_index=True) if hg_frames else pd.DataFrame()
     awards = pd.concat(awards_frames, ignore_index=True) if awards_frames else pd.DataFrame()
 
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
     if not highest.empty:
         highest.to_csv(RAW_DIR / "highest_grossing.csv", index=False)
     if not awards.empty:
@@ -274,15 +406,50 @@ def scrape_music_range(year_start: int = 1985, year_end: int = 2015):
             frames.append(df)
     hits = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
     if not hits.empty:
-        RAW_DIR.mkdir(parents=True, exist_ok=True)
         hits.to_csv(RAW_DIR / "top_hits.csv", index=False)
     return hits
+
+
+def scrape_wiki_albums_range():
+    """Scrape available wiki album lists and persist a CSV."""
+    frames = []
+    for year in WIKI_ALBUM_YEARS:
+        df = scrape_wiki_albums(year)
+        if not df.empty:
+            frames.append(df)
+    albums = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if not albums.empty:
+        albums.to_csv(RAW_DIR / "albums_wiki.csv", index=False)
+    return albums
+
+
+def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015):
+    """Scrape Billboard 200 number-one albums across a year range and persist a CSV."""
+    frames = []
+    for year in range(year_start, year_end + 1):
+        df = scrape_billboard_albums(year)
+        if not df.empty:
+            frames.append(df)
+    if frames:
+        base_cols = ["date", "album", "artist", "label", "sales", "year"]
+        cleaned = []
+        for f in frames:
+            f = f.loc[:, ~f.columns.duplicated()]
+            cleaned.append(f.reindex(columns=base_cols))
+        albums = pd.concat(cleaned, ignore_index=True)
+    else:
+        albums = pd.DataFrame()
+    if not albums.empty:
+        albums.to_csv(RAW_DIR / "albums_billboard.csv", index=False)
+    return albums
 
 
 def main():
     ensure_data_dirs()
     scrape_films_range(YEAR_START, YEAR_END)
     scrape_music_range(YEAR_START, YEAR_END)
+    scrape_wiki_albums_range()
+    scrape_billboard_albums_range(YEAR_START, YEAR_END)
 
 
 if __name__ == "__main__":
