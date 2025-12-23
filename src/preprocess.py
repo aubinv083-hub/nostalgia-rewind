@@ -32,21 +32,21 @@ def clean_gross(input_path=None):
     gross_path = Path(input_path) if input_path else (RAW_DIR / "highest_grossing.csv")
     df = pd.read_csv(gross_path)
 
-    # Robust Regex cleaning for the 'gross' column
+    # Robust cleaning
     df["gross"] = (df["gross"]
                    .astype(str)
-                   .str.replace(r"\[.*?\]", "", regex=True)  # Removes [ 1 ], [ nb 2 ]
+                   .str.replace(r"\[.*?\]", "", regex=True)
                    .str.replace("$", "", regex=False)
                    .str.replace(",", "", regex=False)
                    .str.strip())
 
     df["gross"] = pd.to_numeric(df["gross"], errors='coerce')
 
-    # Aggregation per distributor
-    df["gross_per_distr"] = df.groupby('distributor')['gross'].transform('sum')
+    # Keep the rank!
+    keep_col = ['rank', 'title', 'distributor', 'gross', 'year']
 
-    keep_col = ['distributor', 'year', 'gross', 'gross_per_distr', 'title']
-    df = df[keep_col].sort_values(by=["distributor", "year"]).reset_index(drop=True)
+    # Sort by Year and Rank (Best for the App display)
+    df = df[keep_col].sort_values(by=["year", "rank"]).reset_index(drop=True)
 
     return df
 
@@ -73,19 +73,59 @@ def clean_top_hits(input_path=None):
         .str.strip()
     )
 
-    df['artist_featuring'] = (
-        df['artist']
-        .str.split(r":|,|&|\bwith\b|\bfeaturing\b|\band\b|\bor\b", n=1, regex=True)
-        .str[1]
-        .str.strip()
-    )
+    keep_col = ['rank', 'title', 'main_artist', 'year']
 
-    df['artist_number_sing'] = df.groupby('main_artist')['main_artist'].transform('count')
-
-    keep_col = ['main_artist', 'artist_number_sing', 'artist_featuring', 'title', 'year']
-    df = df[keep_col]
-
-    df = df.sort_values(by=["artist_number_sing", "main_artist", "year"], ascending=[False, False, True]).reset_index(
-        drop=True)
+    df = df[keep_col].sort_values(by=["year", "rank"]).reset_index(drop=True)
 
     return df
+
+def clean_albums_global(input_path="data/raw/albums_wiki.csv"):
+
+    df = pd.read_csv(input_path)
+
+    # specific cleaning if needed
+    df["artist"] = df["artist"].astype(str).str.strip()
+    df["album"] = df["album"].astype(str).str.strip()
+
+    # Ensure sorted
+    df = df.sort_values(by=["year", "rank"]).reset_index(drop=True)
+
+    return df
+
+def clean_albums_us(input_path="data/raw/albums_billboard.csv"):
+
+    df = pd.read_csv(input_path)
+
+    # 1. Clean Sales (remove commas, handle NaNs)
+    df["sales"] = (
+        df["sales"].astype(str)
+        .str.replace(",", "", regex=False)
+        .replace("nan", "0")
+    )
+    df["sales"] = pd.to_numeric(df["sales"], errors="coerce")
+
+    # 2. Detect the "Best Performing" marker (†)
+    df["is_best_performing"] = df["album"].str.contains("†", na=False)
+
+    # 3. Clean Album Name (remove the dagger)
+    df["album"] = df["album"].str.replace("†", "", regex=False).str.strip()
+    df["artist"] = df["artist"].str.strip()
+
+    # 4. Aggregate by Year + Album
+    grouped = df.groupby(["year", "album", "artist"]).agg(
+        weeks_at_one=("date", "count"),
+        is_best=("is_best_performing", "max"),
+        max_sales=("sales", "max")
+    ).reset_index()
+
+    # 5. Calculate Ranks per Year
+    grouped = grouped.sort_values(
+        by=["year", "is_best", "weeks_at_one", "max_sales"],
+        ascending=[True, False, False, False]
+    )
+
+    grouped["rank"] = grouped.groupby("year").cumcount() + 1
+
+    final_df = grouped[["rank", "album", "artist", "year", "weeks_at_one"]]
+
+    return final_df
