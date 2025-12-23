@@ -2,6 +2,7 @@ from pathlib import Path
 import subprocess
 import sys
 import logging
+import os
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
@@ -25,4 +26,10 @@ log.info("Step 2/3: Building dataset")
 run("python scripts/build_dataset.py")
 
 log.info("Step 3/3: Launching Streamlit app")
-run("streamlit run app/streamlit_app.py")
+if os.environ.get('DOCKER_CONTAINER') == 'true':
+    log.info("Running in Docker mode")
+    run("streamlit run app/streamlit_app.py --server.address=0.0.0.0 --server.port=8501 --server.headless=true")
+else:
+    log.info("Running in local mode")
+    run("streamlit run app/streamlit_app.py")
+ 

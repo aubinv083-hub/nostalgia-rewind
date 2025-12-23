@@ -23,18 +23,11 @@ python -m venv .venv
 ```bash
 pip install -r requirements.txt
 ```
-3) Download raw data (adjust sources/keywords inside the script as needed):
+3) Run the pipeline at the repo root through the CLI 
 ```bash
-python scripts/download_data.py
+python run_all.py
 ```
-4) Build the processed dataset:
-```bash
-python scripts/build_dataset.py
-```
-5) Launch the UI:
-```bash
-streamlit run app/streamlit_app.py
-```
+
 
 ## Notes
 - Add or swap data sources in `src/data_sources.py`.
