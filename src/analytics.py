@@ -27,3 +27,32 @@ def generate_best_picture_list(df_awards):
     mask = df_awards['category'].isin(['best film', 'best picture', 'best motion picture'])
     best_pics = df_awards[mask][['year', 'winner']].rename(columns={'winner': 'best_picture'})
     return best_pics
+
+
+def generate_album_stats(df_us, df_global):
+    """Generates summary stats for albums."""
+
+    # Who spent the most weeks at #1 across all years?
+    top_us_albums = (
+        df_us.sort_values("weeks_at_one", ascending=False)
+        .head(20)
+        [["year", "album", "artist", "weeks_at_one"]]
+    )
+
+    # Who are the kings of Billboard? (Total weeks at #1 across all albums)
+    top_us_artists = (
+        df_us.groupby("artist")["weeks_at_one"].sum()
+        .reset_index()
+        .sort_values("weeks_at_one", ascending=False)
+        .head(10)
+        .rename(columns={"weeks_at_one": "total_weeks_at_one"})
+    )
+
+    # Who appears most often in the "Best of Year" lists?
+    top_global_artists = (
+        df_global["artist"].value_counts()
+        .reset_index(name="count")
+        .rename(columns={"index": "artist"})
+        .head(10)
+    )
+    return top_us_albums, top_us_artists, top_global_artists
