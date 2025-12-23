@@ -9,14 +9,12 @@ def clean_awards(input_path="data/raw/awards.csv"):
 
     df = df[keep_col]
 
+    df = df[~df["category"].str.contains("Category/", na=False, case=False)]
     df = df[df["winner"] != "—"]
 
     df = (
         df.assign(
-            category=df["category"]
-            .str.strip().str.lower()
-            .str.replace("category/organisation", "best organisation", regex=False)
-            .str.replace("category/organization", "best organisation", regex=False),
+            category=df["category"].str.strip().str.lower(),
             year=pd.to_numeric(df["year"], errors="coerce")
         )
         .sort_values(by=["category", "year"], ascending=[True, True])
