@@ -1,9 +1,13 @@
+from pathlib import Path
 import pandas as pd
 import re
 
-def clean_awards(input_path="data/raw/awards.csv"):
+from config import RAW_DIR
+
+def clean_awards(input_path=None):
     """Cleans the awards dataset."""
-    df = pd.read_csv(input_path)
+    awards_path = Path(input_path) if input_path else (RAW_DIR / "awards.csv")
+    df = pd.read_csv(awards_path)
 
     keep_col = ['category', 'year', 'winner']
 
@@ -23,9 +27,10 @@ def clean_awards(input_path="data/raw/awards.csv"):
     return df
 
 
-def clean_gross(input_path="data/raw/highest_grossing.csv"):
+def clean_gross(input_path=None):
     """Cleans the box office dataset."""
-    df = pd.read_csv(input_path)
+    gross_path = Path(input_path) if input_path else (RAW_DIR / "highest_grossing.csv")
+    df = pd.read_csv(gross_path)
 
     # Robust Regex cleaning for the 'gross' column
     df["gross"] = (df["gross"]
@@ -46,9 +51,10 @@ def clean_gross(input_path="data/raw/highest_grossing.csv"):
     return df
 
 
-def clean_top_hits(input_path="data/raw/top_hits.csv"):
+def clean_top_hits(input_path=None):
     """Cleans the music dataset."""
-    df = pd.read_csv(input_path)
+    hits_path = Path(input_path) if input_path else (RAW_DIR / "top_hits.csv")
+    df = pd.read_csv(hits_path)
 
     df["title"] = (df["title"].str.replace('"', '', regex=False))
 
