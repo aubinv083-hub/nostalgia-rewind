@@ -123,3 +123,45 @@ background: rgba(183, 148, 244, 0.15);
 border-color: rgba(183, 148, 244, 0.9);
 box-shadow: 0 6px 20px rgba(183, 148, 244, 0.4);
 }
+
+/* ============================= */
+/* Streamlit TABLE (st.table)    */
+/* ============================= */
+
+.stTable {
+    background: rgba(10, 6, 25, 0.75); /* deep violet-black */
+    border: 1px solid rgba(183, 148, 244, 0.6);
+    border-radius: 18px;
+    padding: 8px;
+    backdrop-filter: blur(14px) saturate(120%);
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.45),
+        inset 0 0 0 1px rgba(183,148,244,0.08);
+}
+
+/* Table itself */
+.stTable table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Header */
+.stTable thead th {
+    background: rgba(183, 148, 244, 0.15);
+    color: #D4BBFF;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 10px;
+    border-bottom: 2px solid rgba(183, 148, 244, 0.4);
+}
+
+/* Cells */
+.stTable tbody td {
+    color: #DDD;
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: transparent;
+}
+
