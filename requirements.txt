@@ -4,3 +4,4 @@ beautifulsoup4
 streamlit
 pytrends
 pytest
+plotly
