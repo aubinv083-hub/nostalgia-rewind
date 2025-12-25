@@ -248,8 +248,7 @@ try :
             tooltip=["artist:N", "weeks_at_one:Q"],
         )
         .properties(height=300)
-        .configure(background="transparent")
-        .configure_view(strokeOpacity=0)
+        .configure(background="rgba(0, 0, 0, 0.45)")
     )
 
     chart_hits = (
@@ -275,8 +274,7 @@ try :
             tooltip=["display_artist:N", "total_hits:Q"],
         )
         .properties(height=300)
-        .configure_view(strokeOpacity=0)
-        .configure(background="transparent")
+        .configure(background="rgba(0, 0, 0, 0.45)")   
     )
 
     col1, col2 = st.columns(2, gap="large")
@@ -324,7 +322,7 @@ fig.update_traces(
 
 fig.update_layout(
     height=320,
-    paper_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0.45)',
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis=dict(
         title=None,
