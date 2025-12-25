@@ -120,13 +120,14 @@ if st.session_state.reveal:
             year_movies = movies_df[movies_df["year"] == year].head(5)
 
             if not year_movies.empty:
-                display_movies = year_movies[
-                    ["rank", "title", "distributor", "gross"]
-                ].copy()
+                display_movies = year_movies[["rank", "title", "distributor", "gross"]].copy()
 
-                display_movies.columns = [
-                    "Rank", "Title", "Distributor", "Box Office"
-                ]
+                display_movies.columns = ["Rank", "Title", "Distributor", "Box Office"]
+                display_movies["Box Office"] = display_movies["Box Office"].apply(
+                    lambda x: f"$ {pd.to_numeric(x, errors='coerce'):,.0f}"
+                    if pd.notnull(pd.to_numeric(x, errors="coerce"))
+                    else ""
+                )
                 display_movies = display_movies.set_index("Rank")
                 st.table(display_movies)
 
@@ -169,7 +170,7 @@ if st.session_state.reveal:
             st.markdown(
                 f"""
                 <div class="award-card">
-                  <div class="award-badge">🏆 Awards Winner</div>
+                  <div class="award-badge">🏆 Academy Awards Winner</div>
                   <div class="award-title">{best_film}</div>
                 </div>
                 """,
@@ -216,22 +217,18 @@ if st.session_state.reveal:
     
 else:
     st.caption("Navigate with arrows, then reveal your rewind.")
+
+
 # STATIC SECTION
 st.markdown(
     '<div class="static-title">RULERS OF ERA</div>',
     unsafe_allow_html=True
 )
-st.caption("--A static insights across time--",text_alignment="center")
+st.caption("--Static Insights Across Time--",text_alignment="center")
 
 try : 
     reign_df = load_analytics_longest_reigning()
-    top_artist_df = load_analytics_top_artists()
-
-
-
-
-
-    
+    top_artist_df = load_analytics_top_artists() 
     top_weeks = reign_df[~reign_df['artist'].str.contains('Soundtrack', na=False)].sort_values("weeks_at_one", ascending=False).head(5).copy()
     top_hits = top_artist_df.sort_values("total_hits", ascending=False).head(5).copy()
 
@@ -293,13 +290,13 @@ try :
         st.altair_chart(chart_hits, use_container_width=True)
     
 except Exception as e:
-    st.error(f"Error building 'Who Ruled the ERA' section: {str(e)}")   
+    st.error(f"Error building 'Who Ruled the Era' section: {str(e)}")   
 
 st.markdown(
     '<div class="static-title">BOX OFFICE TOTAL</div>',
     unsafe_allow_html=True
 )
-st.caption("--How box office evoluted over time--",text_alignment="center")
+st.caption("-- How Box Office Evolved Over Time --",text_alignment="center")
 df_yearly_stats = load_analytics_yearly_stats()
 df_yearly_stats = df_yearly_stats.sort_values("year")
 
@@ -350,6 +347,6 @@ st.plotly_chart(fig, use_container_width=True)
 # TUX IN SPACE
 st.markdown("")
 st.markdown("")
-st.markdown('<div style="text-align: center;">Bored ? Help Tux to destroy Bill Gates army !!</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center;">Bored? Help Tux destroy the Bill Gates army!</div>', unsafe_allow_html=True)
 components.html(html, height=700, scrolling=False)
  
