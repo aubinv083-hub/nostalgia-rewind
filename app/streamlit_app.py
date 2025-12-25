@@ -147,7 +147,7 @@ if st.session_state.reveal:
             year_music = music_df[music_df['year'] == year].head(5)
             
             if not year_music.empty:
-                display_music = year_music[['rank', 'title', 'main_artist']].copy()
+                display_music = year_music[['rank', 'title', 'display_artist']].copy()
                 display_music.columns = ['Rank', 'Song', 'Artist']
                 
                 display_music = display_music.set_index("Rank")
@@ -221,7 +221,7 @@ else:
 
 # STATIC SECTION
 st.markdown(
-    '<div class="static-title">RULERS OF ERA</div>',
+    '<div class="static-title">BEST OF THE ERA</div>',
     unsafe_allow_html=True
 )
 st.caption("--Static Insights Across Time--",text_alignment="center")
@@ -257,7 +257,7 @@ try :
         .mark_bar(cornerRadiusTopLeft=6, cornerRadiusTopRight=6)
         .encode(
             x=alt.X(
-                "main_artist:N",
+                "display_artist:N",
                 sort="-y",
                 axis=alt.Axis(labelAngle=-30, labelColor="#E0F7FF", title=None),
             ),
@@ -272,7 +272,7 @@ try :
                 ),
             ),
             color=alt.value("#2FE6FF"),
-            tooltip=["main_artist:N", "total_hits:Q"],
+            tooltip=["display_artist:N", "total_hits:Q"],
         )
         .properties(height=300)
         .configure_view(strokeOpacity=0)

@@ -11,13 +11,20 @@ def generate_yearly_stats(df_gross, df_music):
 
 def generate_top_artists(df_music):
     """Calculates top 20 artists of all time."""
+    # Use normalised main_artist for grouping, and attach a display_artist representative
+    display_map = (
+        df_music.groupby("main_artist")["display_artist"]
+        .agg(lambda x: x.mode().iat[0] if not x.mode().empty else x.iloc[0])
+    )
+
     top = (
         df_music.groupby("main_artist")
-        .agg(total_hits=('title', 'count'))
+        .agg(total_hits=("title", "count"))
         .sort_values("total_hits", ascending=False)
         .head(20)
         .reset_index()
     )
+    top["display_artist"] = top["main_artist"].map(display_map)
     return top
 
 

@@ -58,6 +58,19 @@ def clean_top_hits(input_path=None):
 
     df["title"] = (df["title"].str.replace('"', '', regex=False))
 
+    # Preserve original casing for display, but extract only the main artist
+    df["artist"] = df["artist"].astype(str).str.strip()
+    df["display_artist"] = (
+        df["artist"]
+        .str.split(r",", n=1).str[0]
+        .str.split(r"\s*&\s*", n=1).str[0]
+        .str.split(r"\bwith\b", n=1).str[0]
+        .str.split(r"\bfeaturing\b", n=1).str[0]
+        .str.split(r"\band\b", n=1).str[0]
+        .str.split(r"\bor\b", n=1).str[0]
+        .str.strip()
+    )
+
     df['artist'] = df['artist'].str.lower()
     df['is_feature'] = df['artist'].str.contains(r"(?:\:|&|,|\band\b|\bor\b|\bwith\b|\bfeaturing\b|\bfeat\.?\b|\bft\.?\b)").astype(int)
 
@@ -73,7 +86,7 @@ def clean_top_hits(input_path=None):
         .str.strip()
     )
 
-    keep_col = ['rank', 'title', 'main_artist', 'year']
+    keep_col = ['rank', 'title', 'main_artist', 'display_artist', 'year']
 
     df = df[keep_col].sort_values(by=["year", "rank"]).reset_index(drop=True)
 
