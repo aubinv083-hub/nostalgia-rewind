@@ -1,8 +1,14 @@
 # Miscellaneous 
 *.docx
 *.pdf
-data/
 notebooks/
+
+# Project data artifacts
+data/raw/
+data/html
+data/processed/*
+!data/processed/
+!data/processed/events.csv
 
 # PyCharm
 .idea/
@@ -218,4 +224,6 @@ __marimo__/
 
 # Project data artifacts
 data/raw/
-data/processed/
+data/processed/*
+!data/processed/
+!data/processed/events.csv

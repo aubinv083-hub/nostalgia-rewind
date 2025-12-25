@@ -1,0 +1,311 @@
+year,category,event,importance
+1985,politics,Mikhail Gorbachev becomes Soviet leader,5
+1985,politics,Schengen agreement signed abolishing internal borders,4
+1985,science,Japan launches Sakigake deep-space probe,4
+1985,technology,Internet Domain Name System created,4
+1985,culture,Live Aid concerts raise famine relief funds,5
+1985,culture,Nintendo Entertainment System revitalises video games,4
+1985,society,Coca-Cola introduces and retracts New Coke,3
+1985,society,Greenland exits European Economic Community,3
+1985,society,Vienna Convention to protect ozone layer signed,4
+1985,politics,Heysel Stadium disaster during European Cup Final,3
+1986,science,Chernobyl nuclear disaster in Soviet Union,5
+1986,science,Space Shuttle Challenger disaster kills seven astronauts,5
+1986,science,Soviet Union launches Mir space station,4
+1986,technology,Pixar founded by John Lasseter and Steve Jobs,3
+1986,politics,People Power Revolution ousts Marcos in Philippines,5
+1986,politics,Iran–Contra scandal exposed in United States,4
+1986,culture,Maradona scores two legendary goals against England at FIFA World Cup,2
+1986,politics,The Single European Act is signed,4
+1986,society,Halley’s Comet reaches perihelion,3
+1986,society,El Salvador earthquake kills thousands,4
+1987,politics,United Kingdom Conservative Party re-elected under Thatcher,4
+1987,politics,Reagan challenges Gorbachev to tear down Berlin Wall,4
+1987,politics,Mathias Rust lands small plane on Red Square,3
+1987,science,SN1987A supernova observed with naked eye,5
+1987,science,AZT approved for HIV/AIDS treatment by US FDA,4
+1987,technology,"Apple introduces HyperCard, precursor to the World Wide Web",3
+1987,technology,Singapore Mass Rapid Transit opens for passenger service,3
+1987,culture,Michael Jackson releases Bad studio album,3
+1987,culture,First Rugby World Cup held in New Zealand,2
+1987,society,Black Monday global stock markets crash,5
+1988,politics,Soviet Union begins major economic restructuring and dissolution,5
+1988,politics,Ceasefire effectively ends Iran–Iraq War,5
+1988,politics,George H.W. Bush wins United States presidential election,4
+1988,technology,"First well-known computer virus, the Morris worm",5
+1988,science,First extrasolar planet (Gamma Cephei Ab) detected,4
+1988,technology,First permanent intercontinental Internet link established,4
+1988,technology,Internet Relay Chat chat protocol first used,3
+1988,culture,1988 Summer Olympics held in Seoul,5
+1988,culture,"Who Framed Roger Rabbit by Steven Spielberg releases, influencing animation",2
+1988,society,Massive Armenia earthquake kills thousands,5
+1989,politics,Revolutions of 1989 topple Eastern Bloc communist regimes,5
+1989,politics,Fall of the Berlin Wall begins German reunification,5
+1989,politics,Polish Round Table Agreement legalises Solidarity participation,4
+1989,society,Tiananmen Square protests brutally suppressed in China,5
+1989,society,April 9 massacre of protesters in Tbilisi,3
+1989,technology,Tim Berners-Lee proposes World Wide Web concept,5
+1989,technology,First commercial internet service providers emerge globally,3
+1989,science,Voyager 2 makes its closest approach to Neptune,3
+1989,culture,The Simpsons premieres as a television series,3
+1989,society,US invades Panama to remove dictator Manuel Noriega,3
+1990,politics,Reunification of Germany completed,5
+1990,politics,Unification of Yemen proclaimed,4
+1990,politics,Namibia gains independence from South Africa,3
+1990,science,Hubble Space Telescope launched into orbit,5
+1990,science,Human Genome Project formally begins,4
+1990,technology,First web server and World Wide Web foundation,5
+1990,technology,ARPANET officially decommissioned,3
+1990,culture,1990 FIFA World Cup won by West Germany,3
+1990,society,Nelson Mandela released from prison,5
+1990,society,Margaret Thatcher resigns as UK Prime Minister,4
+1991,politics,Soviet Union formally dissolved into independent republics,5
+1991,politics,Gulf War ends with liberation of Kuwait by coalition,5
+1991,politics,Boris Yeltsin elected first President of Russia,4
+1991,society,L.A. Rodney King beating video sparks riots later,3
+1991,science,Carbon nanotubes discovered by Sumio Iijima,4
+1991,science,Galileo spacecraft first visits asteroid 951 Gaspra,4
+1991,technology,World Wide Web publicly introduced on internet,5
+1991,technology,Linux operating system project announced,4
+1991,culture,Popular music and bands reflect grunge surge,3
+1991,society,Croatia declares independence from Yugoslavia,3
+1992,politics,Cold War declared over at Camp David summit,5
+1992,politics,Maastricht Treaty signed founding the European Union,5
+1992,politics,Bill Clinton wins United States presidential election,4
+1992,science,First exoplanets confirmed orbiting pulsar PSR B1257+12,4
+1992,science,WMO reports unprecedented ozone depletion in Arctic and Antarctic,3
+1992,technology,Windows 3.1 released to manufacturing by Microsoft,3
+1992,technology,Space Shuttle Endeavour makes maiden flight,3
+1992,culture,Cartoon Network launches as 24/7 animation channel,1
+1992,society,Los Angeles riots erupt after Rodney King verdict,4
+1992,society,Babri Masjid demolished sparking widespread communal violence in India,4
+1993,politics,Czechoslovakia dissolves into Czech Republic and Slovakia,4
+1993,politics,Oslo I Accord signed; Arafat and Rabin shake hands,5
+1993,politics,"Maastricht Treaty takes effect, formally establishing the European Union",5
+1993,society,"World Trade Center bombing kills six, injuring over one thousand",4
+1993,science,World Health Organization declares tuberculosis a global emergency,4
+1993,science,Andrew Wiles presents proof of Fermat's Last Theorem,3
+1993,technology,STS-61 launches to repair Hubble Space Telescope,4
+1993,technology,"PoSAT-1, first Portuguese satellite, launched on Ariane 4",2
+1993,culture,Jurassic Park releases in cinemas in the United States,3
+1993,culture,id Software releases first-person shooter game Doom,3
+1994,politics,NAFTA is established,4
+1994,politics,South Africa holds first fully multiracial elections; Mandela wins,5
+1994,politics,Boris Yeltsin orders troops into Chechnya,4
+1994,society,Rwandan genocide begins in Kigali Rwanda,5
+1994,science,Comet Shoemaker-Levy 9 breaks up and collides with Jupiter,4
+1994,science,Flavr Savr genetically modified tomato deemed safe by FDA,3
+1994,technology,China gets its first connection to the Internet,4
+1994,technology,Linux kernel version 1.0.0 is released,3
+1994,culture,Schindler's List wins seven Oscars at Academy Awards,3
+1994,culture,Sony releases the PlayStation video game system in Japan,4
+1995,politics,"World Trade Organization established, replacing GATT",5
+1995,society,"Great Hanshin earthquake strikes in Japan, thousands killed and displaced",5
+1995,society,Tokyo subway sarin attack by Aum Shinrikyo kills 14,4
+1995,technology,"United States stops funding NSFNET, Internet becomes wholly privatised",4
+1995,society,Srebrenica massacre kills thousands of Bosniak men and boys,5
+1995,culture,International Rugby Football Board declares rugby union professional,3
+1995,science,Discovery of 51 Pegasi b announced by Mayor and Queloz,4
+1995,science,"Food and Drug Administration approves Saquinavir, first HIV/AIDS protease inhibitor",4
+1995,politics,Yitzhak Rabin assassinated at peace rally in Tel Aviv,5
+1995,politics,"Dayton Agreement signed in Paris, officially ending Bosnian War",5
+1996,politics,Comprehensive Nuclear Test Ban Treaty signed at United Nations,5
+1996,politics,"Taliban capture Kabul, execute former leader Mohammad Najibullah",5
+1996,politics,Bill Clinton re-elected President of the United States,4
+1996,science,"Dolly the sheep born, first cloned from adult cell",5
+1996,science,NASA says meteorite AH84001 may contain life evidence,4
+1996,technology,Ariane 5 rocket explodes in maiden flight,3
+1996,technology,NASA launches Mars Global Surveyor spacecraft,3
+1996,culture,Braveheart wins Best Picture at 68th Academy Awards,2
+1996,culture,Germany wins UEFA Euro 1996 football tournament,2
+1996,society,Australia introduces nationwide ban on automatic and semi-automatic rifles,4
+1997,politics,United Kingdom hands sovereignty of Hong Kong to China,5
+1997,society,"Bank of Thailand floats baht, triggering Asian financial crisis",5
+1997,politics,Kyoto Protocol adopted by a United Nations committee,4
+1997,science,NASA Pathfinder probe lands on Mars; Sojourner rover deploys,4
+1997,technology,IBM Deep Blue defeats Garry Kasparov in chess rematch,4
+1997,society,"Death of Diana, Princess of Wales, in Paris car crash",4
+1997,culture,Harry Potter and the Philosopher's Stone is published,4
+1997,technology,DVD format launched in the US during Academy Awards,3
+1997,science,Neanderthal DNA analysis supports out of Africa human evolution,3
+1997,culture,James Cameron's Titanic released; becomes highest-grossing film at time,3
+1998,politics,"Good Friday Agreement signed, advancing Northern Ireland peace process",4
+1998,politics,"Rome Statute adopted, creating permanent International Criminal Court",5
+1998,politics,Second Congo War begins in Democratic Republic of the Congo,5
+1998,science,Nozomi probe launched to Mars by Japan,3
+1998,science,Voyager 1 becomes most distant man-made object,2
+1998,technology,"Google, Inc. founded by Larry Page and Sergey Brin",5
+1998,technology,International Space Station first segment Zarya Module launched,4
+1998,culture,"France wins 1998 FIFA World Cup, beating Brazil",3
+1998,culture,Valve releases Half-Life video game to critical acclaim,3
+1998,society,"Hurricane Mitch devastates Central America, killing an estimated 11,000",4
+1999,politics,Euro currency established; European Central Bank assumes full powers,5
+1999,politics,NATO launches air strikes against Federal Republic of Yugoslavia,5
+1999,politics,Boris Yeltsin resigns; Vladimir Putin becomes acting president,4
+1999,science,NASA's Chandra X-ray Observatory is launched,3
+1999,science,Total solar eclipse seen in Europe and Asia,2
+1999,technology,Melissa virus attacks the Internet,3
+1999,technology,China launches the first Shenzhou spacecraft,3
+1999,culture,The Sopranos premieres on HBO,2
+1999,culture,"Woodstock '99 held, marred by violence, riots and deaths",2
+1999,society,"İzmit earthquake kills over 17,000 in Turkey",4
+2000,politics,Vladimir Putin elected President of Russia,4
+2000,politics,Slobodan Milošević resigns after mass protests in Belgrade,4
+2000,politics,Bush v. Gore halts Florida recount; George W. Bush wins,5
+2000,science,Human Genome Project draft genome finished and announced,5
+2000,science,Bastille Day solar flare triggers geomagnetic storm on Earth,3
+2000,technology,Sony releases PlayStation 2 in Japan,4
+2000,technology,ILOVEYOU computer virus spreads worldwide,4
+2000,culture,Millennium celebrations held worldwide for the 3rd millennium,3
+2000,culture,2000 Summer Olympics held in Sydney,3
+2000,society,Mozambique floods kill about 800 after torrential rains,4
+2001,politics,"September 11 attacks in United States kill 2,977 people",5
+2001,politics,"United States leads invasion of Afghanistan, beginning War in Afghanistan",5
+2001,politics,WTO begins Doha Development Round negotiations,3
+2001,science,Human Genome Project publishes first draft human genome sequence,4
+2001,science,IPCC releases Third Assessment Report on climate change,3
+2001,technology,"Wikipedia launches, later becoming world's largest encyclopedia",4
+2001,technology,Apple releases first iPod music player device,3
+2001,culture,Taliban begins destroying the Buddhas of Bamiyan,3
+2001,culture,Harry Potter and the Philosopher's Stone among top-grossing films,3
+2001,society,Netherlands legalises same-sex marriage nationwide,4
+2002,politics,International Criminal Court established as Rome Statute enters into force,5
+2002,politics,United States Congress approves military action in Iraq,5
+2002,politics,Hu Jintao becomes General Secretary of Chinese Communist Party,4
+2002,science,Larsen B ice shelf collapses in Antarctica,3
+2002,science,Early hominid Sahelanthropus discovery announced from Chad fossils,3
+2002,technology,Envisat environmental satellite launched to record environmental change,3
+2002,science,"AKS primality test published by Agrawal, Kayal, Saxena",2
+2002,culture,2002 Winter Olympics held in Salt Lake City,3
+2002,society,Boston Globe investigation exposes Catholic clergy sexual abuse scandal,4
+2002,society,"First SARS case recorded in Guangdong, China",4
+2003,politics,U.S. forces seize Baghdad ending Saddam Hussein’s rule,5
+2003,politics,Treaty of Accession signed for 2004 European Union enlargement,4
+2003,politics,North Korea withdraws from Nuclear Non-Proliferation Treaty,4
+2003,science,Human Genome Project completed; 99% genome sequenced,5
+2003,science,Dwarf planet Sedna discovered by astronomers,3
+2003,technology,Mars Express launches carrying Beagle 2 lander,3
+2003,technology,Three Gorges Dam begins operating as generators activated,4
+2003,culture,Concorde makes its last flight from Heathrow,3
+2003,society,European heat wave brings hottest summer in over five centuries,5
+2003,society,Northeast blackout leaves over 50 million without power,4
+2004,politics,European Union expands by 10 member states,4
+2004,politics,George W. Bush re-elected President defeating John Kerry,4
+2004,politics,Orange Revolution begins after disputed Ukrainian presidential election,3
+2004,society,Al-Qaeda bombs Madrid commuter trains killing at least 192,4
+2004,society,Indian Ocean earthquake triggers tsunami killing about 227K people,5
+2004,science,NASA lands Spirit and Opportunity rovers on Mars,4
+2004,science,Transit of Venus occurs first since 1882,2
+2004,technology,Mark Zuckerberg launches TheFacebook later renamed Facebook,4
+2004,technology,SpaceShipOne achieves first privately funded spaceflight,3
+2004,culture,"2004 Summer Olympics held in Athens, Greece",3
+2005,politics,Kyoto Protocol enters into force,4
+2005,politics,Rafic Hariri assassinated in Beirut,4
+2005,politics,Israel withdraws military from Gaza Strip,4
+2005,science,"Eris, massive dwarf planet, discovered",3
+2005,technology,YouTube founded as online video-sharing platform,5
+2005,technology,"Shenzhou 6 launched, China's second crewed spaceflight",3
+2005,culture,Live 8 concerts held worldwide for Make Poverty History,3
+2005,culture,Harry Potter and the Goblet of Fire top-grossing film,2
+2005,society,"Hurricane Katrina makes landfall, devastates U.S. Gulf Coast",5
+2005,society,"Four suicide bombings hit London, killing 52 people",4
+2006,politics,Hamas wins Palestinian legislative election,4
+2006,politics,Montenegro declares independence; Serbia and Montenegro dissolves,3
+2006,politics,Royal Thai Army overthrows Thaksin Shinawatra in coup,3
+2006,science,Human Genome Project publishes final chromosome sequence in Nature,5
+2006,science,International Astronomical Union reclassifies Pluto as dwarf planet,4
+2006,technology,Twitter microblogging and social networking service launches,4
+2006,technology,Google purchases YouTube for US$1.65 billion,4
+2006,culture,"Winter Olympics held in Turin, Italy",3
+2006,culture,FIFA World Cup held; Italy defeats France in final,5
+2006,society,"Yogyakarta earthquake in Indonesia kills more than 5,700",4
+2007,politics,Bulgaria and Romania join the European Union; Slovenia joins Eurozone,4
+2007,politics,North Korea agrees to shut down Yongbyon nuclear facilities,4
+2007,politics,Treaty of Lisbon signed by European Union member states,4
+2007,science,IPCC Fourth Assessment Report links climate change to humans,5
+2007,science,Gliese 581c potentially Earth-like exoplanet is discovered,3
+2007,technology,Apple introduces the original iPhone at Macworld keynote,5
+2007,technology,Microsoft releases Windows Vista to consumers,3
+2007,culture,Live Earth concerts held worldwide to raise environmental awareness,3
+2007,society,Virginia Tech massacre: Seung-Hui Cho kills 32 people,4
+2007,society,Subprime mortgage crisis begins leading to global economic downturn,5
+2008,politics,Kosovo formally declares independence from Serbia,4
+2008,politics,Russo-Georgian war begins after Russia invades Georgia,4
+2008,politics,Barack Obama elected 44th President of the United States,5
+2008,science,Phoenix spacecraft lands on Mars' northern polar region,3
+2008,science,Proton beam circulated first time in Large Hadron Collider,4
+2008,technology,Satoshi Nakamoto publishes "Bitcoin: A Peer-to-Peer Electronic Cash System",4
+2008,culture,Beijing hosts the 2008 Summer Olympics,4
+2008,culture,"Iron Man released, starting the Marvel Cinematic Universe",3
+2008,society,Lehman Brothers bankruptcy filing intensifies global financial crisis,5
+2008,society,"Earthquake strikes Sichuan, China, killing an estimated 87,000",4
+2009,politics,Barack Obama sworn in as President of the United States,5
+2009,politics,Mass protests erupt across Iran after disputed presidential election,4
+2009,politics,Treaty of Lisbon comes into force in European Union,4
+2009,science,H1N1 influenza outbreak deemed a global pandemic,5
+2009,science,NASA launches Kepler Mission to search for extrasolar planets,3
+2009,technology,Bitcoin blockchain Genesis block established by Satoshi Nakamoto,4
+2009,technology,Boeing 787 Dreamliner makes its first flight,3
+2009,culture,Michael Jackson dies prompting worldwide grief and internet traffic surge,4
+2009,culture,Avatar becomes highest-grossing film globally,2
+2009,society,Oscar Grant killed by police officer inciting Black Lives Matter,3
+2010,society,Haiti earthquake devastates Port-au-Prince,5
+2010,society,Deepwater Horizon explosion causes massive Gulf of Mexico oil spill,5
+2010,technology,First iPad released,4
+2010,technology,Instagram launches publicly,3
+2010,politics,Eurozone and IMF agree Greece bailout package,4
+2010,politics,Mohamed Bouazizi suicide triggers Tunisian Revolution and Arab Spring,5
+2010,science,"CERN traps antihydrogen atoms, first time trapping antimatter",4
+2010,science,Longest annular solar eclipse of the 3rd millennium occurs,2
+2010,culture,FIFA World Cup held in South Africa; Spain wins,4
+2010,culture,Winter Olympics held in Vancouver and Whistler,3
+2011,politics,Arab Spring protests and revolutions spread across Arab world,5
+2011,society,"Tōhoku earthquake and tsunami damage Fukushima Daiichi, releasing contaminants",5
+2011,politics,U.S. Navy SEALs kill Osama bin Laden in Pakistan,5
+2011,politics,"South Sudan secedes from Sudan, becoming the world's newest country",4
+2011,technology,"Space Shuttle Atlantis lands, concluding NASA's Space Shuttle program",4
+2011,science,Mars Science Laboratory rover Curiosity launched from Kennedy Space Center,4
+2011,society,Attacks in Oslo and Utøya kill 77 people,4
+2011,science,Juno spacecraft launched on mission to Jupiter,3
+2011,technology,Snapchat was launched,3
+2011,culture,Prince William and Catherine Middleton marry at Westminster Abbey,3
+2012,science,CERN announces particle consistent with Higgs boson,5
+2012,politics,Xi Jinping becomes General Secretary of Chinese Communist Party,5
+2012,politics,Barack Obama reelected President of the United States,4
+2012,politics,UN General Assembly grants Palestine non-member observer state status,4
+2012,society,"Hurricane Sandy wreaks havoc, causing deaths and widespread damage",4
+2012,science,Curiosity rover successfully lands on Mars,4
+2012,technology,Shenzhou 9 docks with Tiangong-1 orbiting module,3
+2012,technology,Microsoft releases Windows 8 to the general public,3
+2012,culture,2012 Summer Olympics held in London,3
+2012,culture,Psy's song Gangnam Style released; later reaches billion views,3
+2013,politics,UN adopts Arms Trade Treaty regulating international weapons trade,4
+2013,politics,Egyptian President Mohamed Morsi deposed in military coup d'état,5
+2013,politics,Iran agrees to limit nuclear development programme for sanctions relief,4
+2013,science,"Chelyabinsk meteor explodes over Russia injuring nearly 1,500",4
+2013,science,Human embryonic stem cells produced by cloning reported in Nature,4
+2013,technology,India launches uncrewed Mars Orbiter Mission from Sriharikota,3
+2013,technology,Microsoft launches the Xbox One,3
+2013,culture,Grand Theft Auto V earns over half-billion first day,3
+2013,society,Edward Snowden leaks documents revealing global surveillance programmes,5
+2013,society,"Typhoon Haiyan devastates Philippines and Vietnam killing over 6,000",5
+2014,politics,Russia formally annexes Crimea from Ukraine,5
+2014,politics,Islamic State of Iraq and the Levant declares a caliphate,5
+2014,politics,Israel launches Operation Protective Edge against Hamas-controlled Gaza Strip,4
+2014,society,West African Ebola virus epidemic begins,5
+2014,science,India's Mars Orbiter Mission Mangalyaan reaches Martian orbit,4
+2014,science,Rosetta's Philae probe lands on Comet 67P,4
+2014,technology,Mobile devices overtake desktop computers for US internet access,3
+2014,technology,JAXA launches Hayabusa2 spaceprobe mission to asteroid Ryugu,3
+2014,culture,Germany defeats Argentina to win the 2014 FIFA World Cup,4
+2014,culture,"2014 Winter Olympics are held in Sochi, Russia",3
+2015,politics,Iran agrees to long-term nuclear limits for sanctions relief,4
+2015,politics,Global climate change pact agreed at COP21 summit in Paris,5
+2015,politics,Russia begins air strikes against ISIL in Syria,4
+2015,society,"Nepal earthquake kills about 9,000 people",5
+2015,society,Paris terrorist attacks claimed by ISIL kill 137,4
+2015,science,New Horizons performs close flyby of Pluto,4
+2015,science,Gravitational waves detected for first time by LIGO,5
+2015,technology,SpaceX lands uncrewed Falcon 9 first reusable rocket return,4
+2015,technology,Microsoft releases Windows 10,4
+2015,culture,Expo 2015 held in Milan,2
