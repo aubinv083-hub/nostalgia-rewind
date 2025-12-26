@@ -26,7 +26,7 @@ albums_us_path = data_folder / "albums_us.csv"
 analytics_longest_reigning_path = data_folder / "analytics_longest_reigning_albums.csv"
 analytics_top_artists_path = data_folder / "analytics_top_artists.csv"
 analytics_yearly_stats_path = data_folder / "analytics_yearly_stats.csv"
-
+events_path = data_folder / "events.csv"
 @st.cache_data
 def load_movie_data():
     return pd.read_csv(movies_path)
@@ -55,6 +55,9 @@ def load_analytics_top_artists():
 def load_analytics_yearly_stats():
     return pd.read_csv(analytics_yearly_stats_path)
 
+@st.cache_data
+def load_events_data():
+    return pd.read_csv(events_path)
 # YEAR RANGE
 years_desc = list(range(2015, 1984, -1))
 
@@ -214,7 +217,31 @@ if st.session_state.reveal:
     except Exception as e:
         st.error(f"Error loading albums data: {str(e)}")
 
-    
+    st.markdown("")
+    st.markdown('<div class="static-title">MAJOR WORLD EVENTS</div>',unsafe_allow_html=True)
+    try : 
+        events_df = load_events_data()
+        year_events = (
+        events_df[events_df["year"] == year]
+        .sort_values("importance", ascending=False)
+        )
+        if year_events.empty:
+            st.caption("No major world events available for this year.")
+
+        else :
+             top_n = st.slider(
+                "Number of events to display",
+                min_value=3,
+                max_value=10,
+                value=5,
+                key=f"events_{year}"
+             )
+
+             for _, r in year_events.head(top_n).iterrows():
+                st.markdown(f"**[{r['category'].title()}]** {r['event']}")
+                st.progress(r["importance"] / events_df["importance"].max())
+    except Exception as e :
+        st.error(f"Error loading events data: {str(e)}")
 else:
     st.caption("Navigate with arrows, then reveal your rewind.")
 
