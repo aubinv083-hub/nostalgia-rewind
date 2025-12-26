@@ -27,6 +27,8 @@ analytics_longest_reigning_path = data_folder / "analytics_longest_reigning_albu
 analytics_top_artists_path = data_folder / "analytics_top_artists.csv"
 analytics_yearly_stats_path = data_folder / "analytics_yearly_stats.csv"
 events_path = data_folder / "events.csv"
+albums_global_path = data_folder / "albums_global.csv"
+
 @st.cache_data
 def load_movie_data():
     return pd.read_csv(movies_path)
@@ -58,6 +60,10 @@ def load_analytics_yearly_stats():
 @st.cache_data
 def load_events_data():
     return pd.read_csv(events_path)
+
+@st.cache_data
+def load_albums_global():
+    return pd.read_csv(albums_global_path)
 # YEAR RANGE
 years_desc = list(range(2015, 1984, -1))
 
@@ -186,7 +192,6 @@ if st.session_state.reveal:
         st.error(f"Error loading awards data: {str(e)}")
     try:
         albums_df = load_albums_us()
-
         year_albums = albums_df[albums_df["year"] == year].copy()
 
         if not year_albums.empty:
@@ -204,7 +209,7 @@ if st.session_state.reveal:
             st.markdown(
                 f"""
                 <div class="award-card">
-                <div class="award-badge">🎵 Album of the Year</div>
+                <div class="award-badge">🎵 Album of the Year (US)</div>
                 <div class="award-title">{album_title}</div>
                 <div class="award-sub">{album_artist} • {weeks} week(s) at #1</div>
                 </div>
@@ -212,11 +217,33 @@ if st.session_state.reveal:
                 unsafe_allow_html=True
             )
         else:
-            st.info(f"No album data available for {year}")
+            st.info(f"No US album data available for {year}")
 
     except Exception as e:
         st.error(f"Error loading albums data: {str(e)}")
+    
+    try : 
+        if year in range(1990,2010) : 
+            albums_global_df = load_albums_global()
+            year_global = albums_global_df[albums_global_df["year"] == year].copy()
 
+            if not year_global.empty:
+                top_album = year_global[year_global["rank"] == 1].iloc[0]
+                album_title = top_album["album"]
+                album_artist = top_album["artist"]
+
+                st.markdown(
+                    f"""
+                    <div class="award-card">
+                    <div class="award-badge">🌍 Best Album Worldwide</div>
+                    <div class="award-title">{album_title}</div>
+                    <div class="award-sub">{album_artist}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+    except Exception as e: 
+        st.error(f"Error loading global albums data: {str(e)}")  
     st.markdown("")
     st.markdown('<div class="static-title">MAJOR WORLD EVENTS</div>',unsafe_allow_html=True)
     try : 
