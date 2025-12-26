@@ -11,8 +11,12 @@ __pycache__/
 venv/
 
 # Data/artifacts
-data/
-*.csv
+# Data/artifacts
+data/raw/
+data/html/
+data/processed/*
+!data/processed/
+!data/processed/events.csv
 
 # Tests/coverage
 .pytest_cache/

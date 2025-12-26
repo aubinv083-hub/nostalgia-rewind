@@ -14,6 +14,7 @@ Data pipeline and Streamlit UI for exploring nostalgia-driven music trends. The 
 - `tests/` — lightweight checks (schema shape, empty years).
 
 ## Getting started
+### CLI 
 1) Create a virtual environment (recommended):
 ```bash
 python -m venv .venv
@@ -27,7 +28,7 @@ pip install -r requirements.txt
 ```bash
 python run_all.py
 ```
-
+### Docker
 
 ## Notes
 - Add or swap data sources in `src/data_sources.py`.

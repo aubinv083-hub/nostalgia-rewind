@@ -18,4 +18,4 @@ ENV DOCKER_CONTAINER=true
 EXPOSE 8501
 
 
-CMD ["python", "run_pipeline.py"]
+CMD ["python", "-u", "run_all.py"]
