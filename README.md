@@ -1,29 +1,53 @@
 # Nostalgia Rewind
 
-Data pipeline and Streamlit UI for exploring nostalgia-driven music trends. The project scrapes multiple sources, standardises them into a common schema, and surfaces quick analytics (genre shares, yearly counts, peak trends).
+Nostalgia Rewind is your time machine in a browser. Drop in your birth year (or any year 1985-2015) and watch the world reassemble: the movies that ruled the box office, the songs stuck on repeat, the albums that owned the charts, the Oscar winners, and the headlines that defined the moment. Scroll through the years to see how culture evolves, then cap it off by blasting through ‘Tux in Space’ at the bottom of the page, because every rewind deserves a little arcade chaos.
 
-## Project layout
-- `app/streamlit_app.py` — Streamlit UI for the processed dataset.
-- `src/data_sources.py` — scraping + Google Trends helpers.
-- `src/preprocess.py` — cleaning, standardising columns, joining sources.
-- `src/analytics.py` — simple stats helpers.
-- `src/io_utils.py` — paths, caching, I/O.
-- `scripts/download_data.py` — reproducible fetch step.
-- `scripts/build_dataset.py` — end-to-end preprocessing.
-- `data/raw/` and `data/processed/` — local artifacts (not committed if large).
-- `tests/` — lightweight checks (schema shape, empty years).
+## Repo structure
+```
+app/
+├── assets/
+│   ├── game.html          # Tux in Space mini-game
+│   └── style.css          # UI styling
+└── streamlit_app.py       # Main Streamlit UI
+
+config.py                  # Paths and year ranges
+
+data/
+├── html/                  # Cached HTML files
+├── raw/                   # Scraped CSVs (films, hits, awards, albums)
+└── processed/             # Cleaned/analytic outputs and events
+
+scripts/
+├── build_dataset.py       # Runs preprocessing + analytics
+└── download_data.py       # Scrapes Wikipedia/Billboard to raw CSVs
+
+src/
+├── analytics.py           # Aggregations (yearly stats, top artists, album summaries)
+├── io_utils.py            # Filesystem helpers
+└── preprocess.py          # Cleaning/standardising films, awards, singles, albums
+
+Dockerfile
+LICENSE
+README.md                  # This file
+requirements.txt           # Python deps
+run_all.py                 # Orchestrates download -> build -> app
+```
 
 ## Getting started
 ### CLI 
-1) Create a virtual environment (recommended):
+1) Create a virtual environment
 ```bash
 python -m venv .venv
-. .venv/Scripts/activate
+
+source .venv/bin/activate    # Linux/macOS
+.venv\Scripts\activate       # Windows
 ```
-2) Install dependencies:
+
+2) Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
+
 3) Run the pipeline at the repo root through the CLI 
 ```bash
 python run_all.py
@@ -37,14 +61,8 @@ docker run -p 8501:8501 noamlevillayer/nostalgia-rewind:latest
 ```
 Then open your browser to: http://localhost:8501
 
-2) Build from source : 
+2) Build from source: 
 ```bash
 docker build -t nostalgia-rewind .
 docker run -p 8501:8501 nostalgia-rewind
 ```
-## Notes
-- Add or swap data sources in `src/data_sources.py`.
-- Update schema rules or cleaning steps in `src/preprocess.py`.
-- Processed artifacts are saved under `data/processed/`; raw pulls under `data/raw/`.
-- Docker container automatically runs the full pipeline (download → build → launch UI).
-- For local setup, the Streamlit app launches at http://localhost:8501 after running python run_all.py.
