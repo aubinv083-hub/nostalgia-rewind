@@ -29,8 +29,22 @@ pip install -r requirements.txt
 python run_all.py
 ```
 ### Docker
+Prerequisites: Docker Desktop installed and running <br>
+Docker Hub repository: https://hub.docker.com/r/noamlevillayer/nostalgia-rewind
+1) Run from Docker Hub:
+```bash
+docker run -p 8501:8501 noamlevillayer/nostalgia-rewind:latest
+```
+Then open your browser to: http://localhost:8501
 
+2) Build from source : 
+```bash
+docker build -t nostalgia-rewind .
+docker run -p 8501:8501 nostalgia-rewind
+```
 ## Notes
 - Add or swap data sources in `src/data_sources.py`.
 - Update schema rules or cleaning steps in `src/preprocess.py`.
 - Processed artifacts are saved under `data/processed/`; raw pulls under `data/raw/`.
+- Docker container automatically runs the full pipeline (download → build → launch UI).
+- For local setup, the Streamlit app launches at http://localhost:8501 after running python run_all.py.

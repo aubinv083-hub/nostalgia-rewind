@@ -28,6 +28,7 @@ run([sys.executable, "scripts/build_dataset.py"])
 log.info("Step 3/3: Launching Streamlit app")
 if os.environ.get("DOCKER_CONTAINER") == "true":
     log.info("Running in Docker mode")
+    log.info("Open your browser to: http://localhost:8501")
     run([
         "streamlit", "run", "app/streamlit_app.py",
         "--server.address=0.0.0.0",
