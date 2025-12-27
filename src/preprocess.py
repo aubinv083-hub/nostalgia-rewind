@@ -32,7 +32,6 @@ def clean_gross(input_path=None):
     gross_path = Path(input_path) if input_path else (RAW_DIR / "highest_grossing.csv")
     df = pd.read_csv(gross_path)
 
-    # Robust cleaning
     df["gross"] = (df["gross"]
                    .astype(str)
                    .str.replace(r"\[.*?\]", "", regex=True)
@@ -42,10 +41,8 @@ def clean_gross(input_path=None):
 
     df["gross"] = pd.to_numeric(df["gross"], errors='coerce')
 
-    # Keep the rank!
     keep_col = ['rank', 'title', 'distributor', 'gross', 'year']
 
-    # Sort by Year and Rank (Best for the App display)
     df = df[keep_col].sort_values(by=["year", "rank"]).reset_index(drop=True)
 
     return df
@@ -58,7 +55,6 @@ def clean_top_hits(input_path=None):
 
     df["title"] = (df["title"].str.replace('"', '', regex=False))
 
-    # Preserve original casing for display, but extract only the main artist
     df["artist"] = df["artist"].astype(str).str.strip()
     df["display_artist"] = (
         df["artist"]
@@ -74,7 +70,6 @@ def clean_top_hits(input_path=None):
     df['artist'] = df['artist'].str.lower()
     df['is_feature'] = df['artist'].str.contains(r"(?:\:|&|,|\band\b|\bor\b|\bwith\b|\bfeaturing\b|\bfeat\.?\b|\bft\.?\b)").astype(int)
 
-    # Extract main artist
     df["main_artist"] = (
         df["artist"]
         .str.split(r",", n=1).str[0]
@@ -93,23 +88,27 @@ def clean_top_hits(input_path=None):
     return df
 
 def clean_albums_global(input_path="data/raw/albums_wiki.csv"):
-
+    """Cleans Wikipedia albums data."""
     df = pd.read_csv(input_path)
 
-    # specific cleaning if needed
     df["artist"] = df["artist"].astype(str).str.strip()
     df["album"] = df["album"].astype(str).str.strip()
 
-    # Ensure sorted
     df = df.sort_values(by=["year", "rank"]).reset_index(drop=True)
 
     return df
 
 def clean_albums_us(input_path="data/raw/albums_billboard.csv"):
+    """
+    Cleans Billboard 200 number-one albums data.
 
+    - Normalises sales values to numeric.
+    - Flags "best performing" markers embedded in album names.
+    - Removes marker characters from album titles.
+    - Aggregates by year/album/artist to count weeks at #1 and derive per-year ranks.
+    """
     df = pd.read_csv(input_path)
 
-    # 1. Clean Sales (remove commas, handle NaNs)
     df["sales"] = (
         df["sales"].astype(str)
         .str.replace(",", "", regex=False)
@@ -117,21 +116,17 @@ def clean_albums_us(input_path="data/raw/albums_billboard.csv"):
     )
     df["sales"] = pd.to_numeric(df["sales"], errors="coerce")
 
-    # 2. Detect the "Best Performing" marker (†)
     df["is_best_performing"] = df["album"].str.contains("†", na=False)
 
-    # 3. Clean Album Name (remove the dagger)
     df["album"] = df["album"].str.replace("†", "", regex=False).str.strip()
     df["artist"] = df["artist"].str.strip()
 
-    # 4. Aggregate by Year + Album
     grouped = df.groupby(["year", "album", "artist"]).agg(
         weeks_at_one=("date", "count"),
         is_best=("is_best_performing", "max"),
         max_sales=("sales", "max")
     ).reset_index()
 
-    # 5. Calculate Ranks per Year
     grouped = grouped.sort_values(
         by=["year", "is_best", "weeks_at_one", "max_sales"],
         ascending=[True, False, False, False]

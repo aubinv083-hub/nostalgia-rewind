@@ -1,10 +1,8 @@
-from pathlib import Path
 import subprocess
 import sys
 import logging
 import os
 
-# Setup logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 log = logging.getLogger(__name__)
 

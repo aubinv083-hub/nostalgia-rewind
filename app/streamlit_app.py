@@ -64,6 +64,7 @@ def load_events_data():
 @st.cache_data
 def load_albums_global():
     return pd.read_csv(albums_global_path)
+
 # YEAR RANGE
 years_desc = list(range(2015, 1984, -1))
 
@@ -272,7 +273,6 @@ if st.session_state.reveal:
 else:
     st.caption("Navigate with arrows, then reveal your rewind.")
 
-
 # STATIC SECTION
 st.markdown(
     '<div class="static-title">BEST OF THE ERA</div>',
@@ -355,7 +355,7 @@ df_yearly_stats = df_yearly_stats.sort_values("year")
 frames_data = []
 for i in range(2, len(df_yearly_stats) + 1):
     temp_df = df_yearly_stats.iloc[:i].copy()
-    temp_df['frame'] = i - 1  # Frame identifier
+    temp_df['frame'] = i - 1 
     frames_data.append(temp_df)
 
 df_animated = pd.concat(frames_data, ignore_index=True)
@@ -401,4 +401,3 @@ st.markdown("")
 st.markdown("")
 st.markdown('<div style="text-align: center;">Bored? Help Tux destroy the Bill Gates army!</div>', unsafe_allow_html=True)
 components.html(html, height=700, scrolling=False)
- 

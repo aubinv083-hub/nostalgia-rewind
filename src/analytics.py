@@ -11,7 +11,6 @@ def generate_yearly_stats(df_gross, df_music):
 
 def generate_top_artists(df_music):
     """Calculates top 20 artists of all time."""
-    # Use normalised main_artist for grouping, and attach a display_artist representative
     display_map = (
         df_music.groupby("main_artist")["display_artist"]
         .agg(lambda x: x.mode().iat[0] if not x.mode().empty else x.iloc[0])
@@ -30,7 +29,6 @@ def generate_top_artists(df_music):
 
 def generate_best_picture_list(df_awards):
     """Extracts only Best Picture winners for the timeline."""
-    # Filter strictly for best film/picture categories
     mask = df_awards['category'].isin(['best film', 'best picture', 'best motion picture'])
     best_pics = df_awards[mask][['year', 'winner']].rename(columns={'winner': 'best_picture'})
     return best_pics
@@ -46,7 +44,7 @@ def generate_album_stats(df_us, df_global):
         [["year", "album", "artist", "weeks_at_one"]]
     )
 
-    # Who are the kings of Billboard? (Total weeks at #1 across all albums)
+    # Who are the leaders of Billboard? (Total weeks at #1 across all albums)
     top_us_artists = (
         df_us.groupby("artist")["weeks_at_one"].sum()
         .reset_index()

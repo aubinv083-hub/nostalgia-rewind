@@ -6,7 +6,6 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-# temporary shim to adjust import paths for running this script directly
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -41,6 +40,7 @@ def cached_billboard_albums_path(year: int) -> Path:
 
 
 def fetch_with_cache(url: str, cache_path: Path) -> str:
+    """Fetches a URL with a browser-like user agent and caches the HTML locally."""
     HTML_DIR.mkdir(parents=True, exist_ok=True)
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8")
@@ -52,7 +52,6 @@ def fetch_with_cache(url: str, cache_path: Path) -> str:
 
 
 def fetch_film_page(year: int) -> str:
-    """Download the Wikipedia page for the given year with a browser-like user agent and cache HTML locally."""
     url = FILM_URL.format(year=year)
     return fetch_with_cache(url, cached_film_path(year))
 
