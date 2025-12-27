@@ -1,7 +1,17 @@
+from typing import Tuple
 import pandas as pd
 
-def generate_yearly_stats(df_gross, df_music):
-    """Merges box office sums and song counts by year."""
+def generate_yearly_stats(df_gross: pd.DataFrame, df_music: pd.DataFrame) -> pd.DataFrame:
+    """
+    Merge box office totals and unique song counts by year.
+
+    Args:
+        df_gross: Cleaned box office data.
+        df_music: Cleaned top hits data.
+
+    Returns:
+        DataFrame with year, total_box_office, unique_songs_charted.
+    """
     yearly_gross = df_gross.groupby("year")["gross"].sum().reset_index(name="total_box_office")
     yearly_songs = df_music.groupby("year")["title"].nunique().reset_index(name="unique_songs_charted")
 
@@ -9,8 +19,16 @@ def generate_yearly_stats(df_gross, df_music):
     return stats
 
 
-def generate_top_artists(df_music):
-    """Calculates top 20 artists of all time."""
+def generate_top_artists(df_music: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate top 20 artists of all time.
+
+    Args:
+        df_music: Cleaned top hits data.
+
+    Returns:
+        DataFrame with main_artist, display_artist, total_hits (top 20).
+    """
     display_map = (
         df_music.groupby("main_artist")["display_artist"]
         .agg(lambda x: x.mode().iat[0] if not x.mode().empty else x.iloc[0])
@@ -27,15 +45,32 @@ def generate_top_artists(df_music):
     return top
 
 
-def generate_best_picture_list(df_awards):
-    """Extracts only Best Picture winners for the timeline."""
+def generate_best_picture_list(df_awards: pd.DataFrame) -> pd.DataFrame:
+    """
+    Extract Best Picture winners for the timeline.
+
+    Args:
+        df_awards: Cleaned awards data.
+
+    Returns:
+        DataFrame with year and best_picture.
+    """
     mask = df_awards['category'].isin(['best film', 'best picture', 'best motion picture'])
     best_pics = df_awards[mask][['year', 'winner']].rename(columns={'winner': 'best_picture'})
     return best_pics
 
 
-def generate_album_stats(df_us, df_global):
-    """Generates summary stats for albums."""
+def generate_album_stats(df_us: pd.DataFrame, df_global: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Generate summary stats for albums.
+
+    Args:
+        df_us: Billboard albums data (cleaned).
+        df_global: Wiki global albums data (cleaned).
+
+    Returns:
+        Tuple of (top_us_albums, top_us_artists, top_global_artists).
+    """
 
     # Who spent the most weeks at #1 across all years?
     top_us_albums = (

@@ -2,11 +2,13 @@ import subprocess
 import sys
 import logging
 import os
+from typing import List
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 log = logging.getLogger(__name__)
 
-def run(cmd):
+def run(cmd: List[str]) -> None:
+    """Run a subprocess command, exiting on failure."""
     log.info(f"Running: {' '.join(cmd)}")
     r = subprocess.run(cmd, shell=False)
     if r.returncode != 0:

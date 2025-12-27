@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any, List
 import sys
 import re
 
@@ -24,23 +25,36 @@ HEADERS = {
 
 
 def cached_film_path(year: int) -> Path:
+    """Return cache path for a film page."""
     return HTML_DIR / f"{year}_in_film.html"
 
 
 def cached_music_path(year: int) -> Path:
+    """Return cache path for a music page."""
     return HTML_DIR / f"{year}_in_music.html"
 
 
 def cached_billboard_singles_path(year: int) -> Path:
+    """Return cache path for a Billboard singles page."""
     return HTML_DIR / f"billboard_hot_100_{year}.html"
 
 
 def cached_billboard_albums_path(year: int) -> Path:
+    """Return cache path for a Billboard albums page."""
     return HTML_DIR / f"billboard_200_{year}.html"
 
 
 def fetch_with_cache(url: str, cache_path: Path) -> str:
-    """Fetches a URL with a browser-like user agent and caches the HTML locally."""
+    """
+    Fetch a URL with a browser-like user agent and cache the HTML locally.
+
+    Args:
+        url: Target URL.
+        cache_path: Local path to store/read cached HTML.
+
+    Returns:
+        HTML content as text.
+    """
     HTML_DIR.mkdir(parents=True, exist_ok=True)
     if cache_path.exists():
         return cache_path.read_text(encoding="utf-8")
@@ -52,27 +66,40 @@ def fetch_with_cache(url: str, cache_path: Path) -> str:
 
 
 def fetch_film_page(year: int) -> str:
+    """Fetch the film page for a year (with caching)."""
     url = FILM_URL.format(year=year)
     return fetch_with_cache(url, cached_film_path(year))
 
 
 def fetch_music_page(year: int) -> str:
+    """Fetch the music page for a year (with caching)."""
     url = MUSIC_URL.format(year=year)
     return fetch_with_cache(url, cached_music_path(year))
 
 
 def fetch_billboard_singles_page(year: int) -> str:
+    """Fetch the Billboard Year-End Hot 100 page for a year (with caching)."""
     url = SINGLES_BILLBOARD_URL.format(year=year)
     return fetch_with_cache(url, cached_billboard_singles_path(year))
 
 
 def fetch_billboard_albums_page(year: int) -> str:
+    """Fetch the Billboard 200 number-one albums page for a year (with caching)."""
     url = ALBUMS_BILLBOARD_URL.format(year=year)
     return fetch_with_cache(url, cached_billboard_albums_path(year))
 
 
-def _section_tables(html: str, keyword: str):
-    """Return tables that appear under the first heading matching the keyword."""
+def _section_tables(html: str, keyword: str) -> List[Any]:
+    """
+    Return tables under the first heading matching a keyword.
+
+    Args:
+        html: Raw HTML.
+        keyword: Section heading text to match (case-insensitive).
+
+    Returns:
+        List of table tags following that heading.
+    """
     soup = BeautifulSoup(html, "html.parser")
     needle = keyword.lower()
     for heading in soup.find_all(["h2", "h3"]):
@@ -88,8 +115,16 @@ def _section_tables(html: str, keyword: str):
     return []
 
 
-def parse_html_table(table) -> pd.DataFrame:
-    """Parse an HTML table into a DataFrame."""
+def parse_html_table(table: Any) -> pd.DataFrame:
+    """
+    Parse an HTML table into a DataFrame, handling simple rowspan/colspan.
+
+    Args:
+        table: BeautifulSoup table element.
+
+    Returns:
+        DataFrame of the parsed table.
+    """
     rows = table.find_all("tr")
     if not rows:
         return pd.DataFrame()
@@ -142,7 +177,15 @@ def parse_html_table(table) -> pd.DataFrame:
 
 
 def scrape_highest_grossing(year: int) -> pd.DataFrame:
-    """Scrape the highest-grossing films table for a given year."""
+    """
+    Scrape the highest-grossing films table for a given year.
+
+    Args:
+        year: Target year.
+
+    Returns:
+        DataFrame with rank, title, distributor, gross, year.
+    """
     html = fetch_film_page(year)
     tables = _section_tables(html, "highest-grossing")
     if not tables:
@@ -166,7 +209,15 @@ def scrape_highest_grossing(year: int) -> pd.DataFrame:
 
 
 def scrape_awards(year: int) -> pd.DataFrame:
-    """Scrape awards tables for a given year, keeping only category/org + Academy Awards columns."""
+    """
+    Scrape awards tables for a given year, keeping only category/org + Academy Awards columns.
+
+    Args:
+        year: Target year.
+
+    Returns:
+        DataFrame with category, winner, year.
+    """
     html = fetch_film_page(year)
     tables = _section_tables(html, "awards")
     if not tables:
@@ -204,8 +255,13 @@ def scrape_awards(year: int) -> pd.DataFrame:
 
 def scrape_wiki_albums(year: int) -> pd.DataFrame:
     """
-    Scrape top albums from the {year}_in_music page.
-    Only available for specific years noted in config.WIKI_ALBUM_YEARS.
+    Scrape top albums from a year-in-music page (only for configured years).
+
+    Args:
+        year: Target year.
+
+    Returns:
+        DataFrame with rank, artist, album, year (empty if year unsupported).
     """
     if year not in WIKI_ALBUM_YEARS:
         return pd.DataFrame()
@@ -281,7 +337,15 @@ def scrape_wiki_albums(year: int) -> pd.DataFrame:
 
 
 def scrape_billboard_albums(year: int) -> pd.DataFrame:
-    """Scrape Billboard 200 number-one albums list for a given year."""
+    """
+    Scrape Billboard 200 number-one albums list for a given year.
+
+    Args:
+        year: Target year.
+
+    Returns:
+        DataFrame with issue_date, album, artist, notes, year.
+    """
     html = fetch_billboard_albums_page(year)
     soup = BeautifulSoup(html, "html.parser")
     tables = (
@@ -326,9 +390,13 @@ def scrape_billboard_albums(year: int) -> pd.DataFrame:
 
 def scrape_top_hits(year: int) -> pd.DataFrame:
     """
-    Scrape biggest hit singles for the given year.
-    1985-2000: use {year}_in_music page, "Biggest hit singles" section.
-    2001+: use Billboard Year-End Hot 100 page.
+    Scrape biggest hit singles for a year (music pages pre-2001, Billboard after).
+
+    Args:
+        year: Target year.
+
+    Returns:
+        DataFrame with rank, artist, title, year.
     """
     desired_cols = ["rank", "artist", "title"]
 
@@ -371,8 +439,17 @@ def scrape_top_hits(year: int) -> pd.DataFrame:
     return df
 
 
-def scrape_films_range(year_start: int = 1985, year_end: int = 2015):
-    """Scrape highest-grossing and awards tables across a year range and persist CSVs."""
+def scrape_films_range(year_start: int = 1985, year_end: int = 2015) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Scrape highest-grossing and awards tables across a year range and persist CSVs.
+
+    Args:
+        year_start: First year inclusive.
+        year_end: Last year inclusive.
+
+    Returns:
+        Tuple of (highest_grossing_df, awards_df).
+    """
     hg_frames = []
     awards_frames = []
 
@@ -396,8 +473,17 @@ def scrape_films_range(year_start: int = 1985, year_end: int = 2015):
     return highest, awards
 
 
-def scrape_music_range(year_start: int = 1985, year_end: int = 2015):
-    """Scrape top hits across a year range and persist a CSV."""
+def scrape_music_range(year_start: int = 1985, year_end: int = 2015) -> pd.DataFrame:
+    """
+    Scrape top hits across a year range and persist a CSV.
+
+    Args:
+        year_start: First year inclusive.
+        year_end: Last year inclusive.
+
+    Returns:
+        DataFrame of concatenated hits.
+    """
     frames = []
     for year in range(year_start, year_end + 1):
         df = scrape_top_hits(year)
@@ -409,8 +495,13 @@ def scrape_music_range(year_start: int = 1985, year_end: int = 2015):
     return hits
 
 
-def scrape_wiki_albums_range():
-    """Scrape available wiki album lists and persist a CSV."""
+def scrape_wiki_albums_range() -> pd.DataFrame:
+    """
+    Scrape available wiki album lists and persist a CSV.
+
+    Returns:
+        DataFrame of concatenated wiki album entries.
+    """
     frames = []
     for year in WIKI_ALBUM_YEARS:
         df = scrape_wiki_albums(year)
@@ -422,8 +513,17 @@ def scrape_wiki_albums_range():
     return albums
 
 
-def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015):
-    """Scrape Billboard 200 number-one albums across a year range and persist a CSV."""
+def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015) -> pd.DataFrame:
+    """
+    Scrape Billboard 200 number-one albums across a year range and persist a CSV.
+
+    Args:
+        year_start: First year inclusive.
+        year_end: Last year inclusive.
+
+    Returns:
+        DataFrame of concatenated Billboard album entries.
+    """
     frames = []
     for year in range(year_start, year_end + 1):
         df = scrape_billboard_albums(year)
@@ -443,7 +543,8 @@ def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015):
     return albums
 
 
-def main():
+def main() -> None:
+    """Run all scrape steps and write raw CSVs."""
     ensure_data_dirs()
     scrape_films_range(YEAR_START, YEAR_END)
     scrape_music_range(YEAR_START, YEAR_END)

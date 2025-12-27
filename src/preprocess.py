@@ -1,11 +1,20 @@
 from pathlib import Path
+from typing import Optional
 import pandas as pd
 import re
 
 from config import RAW_DIR
 
-def clean_awards(input_path=None):
-    """Cleans the awards dataset."""
+def clean_awards(input_path: Optional[str | Path] = None) -> pd.DataFrame:
+    """
+    Clean the awards dataset.
+
+    Args:
+        input_path: Optional path to awards CSV; defaults to data/raw/awards.csv.
+
+    Returns:
+        DataFrame with category (lowercased), winner, and numeric year, sorted.
+    """
     awards_path = Path(input_path) if input_path else (RAW_DIR / "awards.csv")
     df = pd.read_csv(awards_path)
 
@@ -27,8 +36,16 @@ def clean_awards(input_path=None):
     return df
 
 
-def clean_gross(input_path=None):
-    """Cleans the box office dataset."""
+def clean_gross(input_path: Optional[str | Path] = None) -> pd.DataFrame:
+    """
+    Clean the box office dataset.
+
+    Args:
+        input_path: Optional path to highest_grossing CSV; defaults to data/raw/.
+
+    Returns:
+        DataFrame with rank, title, distributor, gross (numeric), year, sorted by year/rank.
+    """
     gross_path = Path(input_path) if input_path else (RAW_DIR / "highest_grossing.csv")
     df = pd.read_csv(gross_path)
 
@@ -48,8 +65,16 @@ def clean_gross(input_path=None):
     return df
 
 
-def clean_top_hits(input_path=None):
-    """Cleans the music dataset."""
+def clean_top_hits(input_path: Optional[str | Path] = None) -> pd.DataFrame:
+    """
+    Clean the music dataset.
+
+    Args:
+        input_path: Optional path to top_hits CSV; defaults to data/raw/.
+
+    Returns:
+        DataFrame with rank, title, main_artist (normalized), display_artist (original casing), year.
+    """
     hits_path = Path(input_path) if input_path else (RAW_DIR / "top_hits.csv")
     df = pd.read_csv(hits_path)
 
@@ -87,8 +112,16 @@ def clean_top_hits(input_path=None):
 
     return df
 
-def clean_albums_global(input_path="data/raw/albums_wiki.csv"):
-    """Cleans Wikipedia albums data."""
+def clean_albums_global(input_path: str = "data/raw/albums_wiki.csv") -> pd.DataFrame:
+    """
+    Clean Wikipedia albums data.
+
+    Args:
+        input_path: Path to albums_wiki.csv.
+
+    Returns:
+        DataFrame sorted by year/rank with stripped artist/album fields.
+    """
     df = pd.read_csv(input_path)
 
     df["artist"] = df["artist"].astype(str).str.strip()
@@ -98,14 +131,20 @@ def clean_albums_global(input_path="data/raw/albums_wiki.csv"):
 
     return df
 
-def clean_albums_us(input_path="data/raw/albums_billboard.csv"):
+def clean_albums_us(input_path: str = "data/raw/albums_billboard.csv") -> pd.DataFrame:
     """
-    Cleans Billboard 200 number-one albums data.
+    Clean Billboard 200 number-one albums data.
 
-    - Normalises sales values to numeric.
-    - Flags "best performing" markers embedded in album names.
-    - Removes marker characters from album titles.
-    - Aggregates by year/album/artist to count weeks at #1 and derive per-year ranks.
+    Args:
+        input_path: Path to albums_billboard.csv.
+
+    Returns:
+        Aggregated DataFrame with rank per year, album, artist, year, weeks_at_one.
+
+    Notes:
+        - Normalizes sales to numeric.
+        - Flags and strips dagger markers.
+        - Aggregates by year/album/artist to count weeks at #1 and derive ranks.
     """
     df = pd.read_csv(input_path)
 

@@ -9,7 +9,8 @@ from src.preprocess import clean_awards, clean_gross, clean_top_hits, clean_albu
 from src.analytics import generate_yearly_stats, generate_top_artists, generate_best_picture_list, generate_album_stats
 
 
-def main():
+def main() -> None:
+    """Run preprocessing and analytics to produce processed datasets."""
     # 1. RUN PREPROCESSING
 
     df_awards = clean_awards()
