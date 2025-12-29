@@ -569,11 +569,11 @@ def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015) 
 
 def main() -> None:
     """Run all scrape steps and write raw CSVs."""
-    #ensure_data_dirs()
+    ensure_data_dirs()
     scrape_films_range(YEAR_START, YEAR_END)
-    #scrape_music_range(YEAR_START, YEAR_END)
-    #scrape_wiki_albums_range()
-    #scrape_billboard_albums_range(YEAR_START, YEAR_END)
+    scrape_music_range(YEAR_START, YEAR_END)
+    scrape_wiki_albums_range()
+    scrape_billboard_albums_range(YEAR_START, YEAR_END)
 
 
 if __name__ == "__main__":

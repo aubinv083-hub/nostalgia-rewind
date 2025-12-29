@@ -17,6 +17,7 @@ def resolve_film_wiki_url(title: str, year: int) -> str:
     """
     base_title = title.replace(" ", "_")
     candidates = [
+        f"https://en.wikipedia.org/wiki/{base_title}_({year}_Disney_film)",
         f"https://en.wikipedia.org/wiki/{base_title}_({year}_film)",
         f"https://en.wikipedia.org/wiki/{base_title}_(film)",
         f"https://en.wikipedia.org/wiki/{base_title}",
@@ -32,7 +33,7 @@ def resolve_film_wiki_url(title: str, year: int) -> str:
             final = resp.url.lower()
             if "wikipedia does not have an article with this exact name" in html:
                 continue
-            if "may refer to" in html.lower():
+            if "may also refer to" in html.lower():
                 continue
             if f"({year}_film)" in final or "_(film)" in final:
                 return resp.url
