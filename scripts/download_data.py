@@ -6,6 +6,7 @@ import re
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+import logging
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
@@ -14,6 +15,7 @@ if str(REPO_ROOT) not in sys.path:
 from config import HTML_DIR, RAW_DIR, WIKI_ALBUM_YEARS, YEAR_END, YEAR_START, HTML_CACHE_ENABLED
 from src.io_utils import ensure_data_dirs
 
+log = logging.getLogger(__name__)
 
 FILM_URL = "https://en.wikipedia.org/wiki/{year}_in_film"
 MUSIC_URL = "https://en.wikipedia.org/wiki/{year}_in_music"
@@ -224,7 +226,25 @@ def scrape_awards(year: int) -> pd.DataFrame:
     """
     html = fetch_film_page(year)
     tables = _section_tables(html, "awards")
+    soup = BeautifulSoup(html, "html.parser")
     if not tables:
+        for heading in soup.find_all(["h2", "h3"]):
+            if "awards" in heading.get_text(" ", strip=True).lower():
+                rows = []
+                for sib in heading.find_all_next():
+                    if sib.name in ("h2", "h3") and sib is not heading:
+                        break
+                    if sib.name in ("b", "strong", "p"):
+                        txt = sib.get_text(" ", strip=True).lower()
+                        if rows and any(key in txt for key in ["golden", "palme"]):
+                            break
+                    if sib.name == "dd":
+                        text = sib.get_text(" ", strip=True)
+                        if ":" in text:
+                            cat, win = text.split(":", 1)
+                            rows.append({"category": cat.strip(), "winner": win.strip(), "year": year})
+                if rows:
+                    return pd.DataFrame(rows)
         return pd.DataFrame()
 
     frames = []
@@ -549,11 +569,11 @@ def scrape_billboard_albums_range(year_start: int = 1985, year_end: int = 2015) 
 
 def main() -> None:
     """Run all scrape steps and write raw CSVs."""
-    ensure_data_dirs()
+    #ensure_data_dirs()
     scrape_films_range(YEAR_START, YEAR_END)
-    scrape_music_range(YEAR_START, YEAR_END)
-    scrape_wiki_albums_range()
-    scrape_billboard_albums_range(YEAR_START, YEAR_END)
+    #scrape_music_range(YEAR_START, YEAR_END)
+    #scrape_wiki_albums_range()
+    #scrape_billboard_albums_range(YEAR_START, YEAR_END)
 
 
 if __name__ == "__main__":

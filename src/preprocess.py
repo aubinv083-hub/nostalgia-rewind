@@ -23,6 +23,7 @@ def clean_awards(input_path: Optional[str | Path] = None) -> pd.DataFrame:
 
     df = df[~df["category"].str.contains("Category/", na=False, case=False)]
     df = df[df["winner"] != "—"]
+    df["category"] = df["category"].str.replace("Best Picture", "Best Film", regex=False)
 
     df = (
         df.assign(
@@ -32,6 +33,10 @@ def clean_awards(input_path: Optional[str | Path] = None) -> pd.DataFrame:
         .sort_values(by=["category", "year"], ascending=[True, True])
         .reset_index(drop=True)
     )
+
+    mask_film = df["category"].str.contains("film", na=False)
+    df.loc[mask_film, "winner"] = df.loc[mask_film, "winner"].str.split(" - ", n=1).str[0].str.strip()
+    
     return df
 
 
