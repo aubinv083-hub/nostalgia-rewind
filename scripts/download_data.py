@@ -11,7 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from config import HTML_DIR, RAW_DIR, WIKI_ALBUM_YEARS, YEAR_END, YEAR_START
+from config import HTML_DIR, RAW_DIR, WIKI_ALBUM_YEARS, YEAR_END, YEAR_START, HTML_CACHE_ENABLED
 from src.io_utils import ensure_data_dirs
 
 
@@ -44,9 +44,9 @@ def cached_billboard_albums_path(year: int) -> Path:
     return HTML_DIR / f"billboard_200_{year}.html"
 
 
-def fetch_with_cache(url: str, cache_path: Path) -> str:
+def fetch_with_cache(url: str, cache_path: Path | None = None) -> str:
     """
-    Fetch a URL with a browser-like user agent and cache the HTML locally.
+    Fetch a URL with a browser-like user agent and optionally cache the HTML locally.
 
     Args:
         url: Target URL.
@@ -55,13 +55,17 @@ def fetch_with_cache(url: str, cache_path: Path) -> str:
     Returns:
         HTML content as text.
     """
-    HTML_DIR.mkdir(parents=True, exist_ok=True)
-    if cache_path.exists():
-        return cache_path.read_text(encoding="utf-8")
+    if HTML_CACHE_ENABLED:
+        HTML_DIR.mkdir(parents=True, exist_ok=True)
+        if cache_path.exists():
+            return cache_path.read_text(encoding="utf-8")
+
     resp = requests.get(url, headers=HEADERS, timeout=15)
     resp.raise_for_status()
     html = resp.text
-    cache_path.write_text(html, encoding=resp.encoding or "utf-8")
+
+    if HTML_CACHE_ENABLED:
+        cache_path.write_text(html, encoding=resp.encoding or "utf-8")
     return html
 
 

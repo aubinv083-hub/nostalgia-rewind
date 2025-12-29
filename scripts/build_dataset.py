@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from config import PROCESSED_DIR
+from config import PROCESSED_DIR, RAW_DIR
 
 from src.preprocess import clean_awards, clean_gross, clean_top_hits, clean_albums_us, clean_albums_global
 from src.analytics import generate_yearly_stats, generate_top_artists, generate_best_picture_list, generate_album_stats
@@ -22,11 +22,11 @@ def main() -> None:
     df_hits = clean_top_hits()
     df_hits.to_csv(PROCESSED_DIR / "top_hits.csv", index=False)
 
-    df_global = clean_albums_global("data/raw/albums_wiki.csv")
-    df_global.to_csv("data/processed/albums_global.csv", index=False)
+    df_global = clean_albums_global(RAW_DIR / "albums_wiki.csv")
+    df_global.to_csv(PROCESSED_DIR / "albums_global.csv", index=False)
 
-    df_us = clean_albums_us("data/raw/albums_billboard.csv")
-    df_us.to_csv("data/processed/albums_us.csv", index=False)
+    df_us = clean_albums_us(RAW_DIR / "albums_billboard.csv")
+    df_us.to_csv(PROCESSED_DIR / "albums_us.csv", index=False)
 
     # 2. RUN ANALYTICS
 
@@ -41,9 +41,9 @@ def main() -> None:
 
     top_us_alb, top_us_art, top_glob_art = generate_album_stats(df_us, df_global)
 
-    top_us_alb.to_csv("data/processed/analytics_longest_reigning_albums.csv", index=False)
-    top_us_art.to_csv("data/processed/analytics_top_billboard_artists.csv", index=False)
-    top_glob_art.to_csv("data/processed/analytics_top_critics_artists.csv", index=False)
+    top_us_alb.to_csv(PROCESSED_DIR / "analytics_longest_reigning_albums.csv", index=False)
+    top_us_art.to_csv(PROCESSED_DIR / "analytics_top_billboard_artists.csv", index=False)
+    top_glob_art.to_csv(PROCESSED_DIR / "analytics_top_critics_artists.csv", index=False)
 
 if __name__ == "__main__":
     main()

@@ -6,6 +6,8 @@ RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 HTML_DIR = DATA_DIR / "html"
 
+HTML_CACHE_ENABLED = False
+
 YEAR_START = 1985
 YEAR_END = 2015
 

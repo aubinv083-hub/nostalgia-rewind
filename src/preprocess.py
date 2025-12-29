@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Optional
 import pandas as pd
-import re
 
 from config import RAW_DIR
 

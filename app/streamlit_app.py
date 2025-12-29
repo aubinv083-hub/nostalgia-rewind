@@ -7,6 +7,13 @@ import altair as alt
 import plotly.graph_objects as go
 import plotly.express as px
 import urllib.parse
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from config import PROCESSED_DIR, YEAR_START, YEAR_END
 
 st.set_page_config(page_title="Nostalgia Rewind", page_icon="🎦", layout="wide")
 
@@ -18,17 +25,16 @@ html = (base / "game.html").read_text(encoding="utf-8")
 css_path = Path(__file__).resolve().parent / "assets" / "style.css"
 st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
 
-# DATA DEPENDENCIES
-data_folder = Path(__file__).resolve().parent.parent / "data" / "processed"
-movies_path = data_folder / "highest_grossing.csv"
-music_path = data_folder / "top_hits.csv"
-awards_path = data_folder / "awards.csv"
-albums_us_path = data_folder / "albums_us.csv"
-analytics_longest_reigning_path = data_folder / "analytics_longest_reigning_albums.csv"
-analytics_top_artists_path = data_folder / "analytics_top_artists.csv"
-analytics_yearly_stats_path = data_folder / "analytics_yearly_stats.csv"
-events_path = data_folder / "events.csv"
-albums_global_path = data_folder / "albums_global.csv"
+# DATA DEPENDENCIES 
+movies_path = PROCESSED_DIR / "highest_grossing.csv"
+music_path = PROCESSED_DIR / "top_hits.csv"
+awards_path = PROCESSED_DIR / "awards.csv"
+albums_us_path = PROCESSED_DIR / "albums_us.csv"
+analytics_longest_reigning_path = PROCESSED_DIR / "analytics_longest_reigning_albums.csv"
+analytics_top_artists_path = PROCESSED_DIR / "analytics_top_artists.csv"
+analytics_yearly_stats_path = PROCESSED_DIR / "analytics_yearly_stats.csv"
+events_path = PROCESSED_DIR / "events.csv"
+albums_global_path = PROCESSED_DIR / "albums_global.csv"
 
 
 @st.cache_data
@@ -77,9 +83,9 @@ def load_albums_global():
 
 
 # YEAR RANGE
-years_desc = list(range(2015, 1984, -1))
+years_desc = list(range(YEAR_END, YEAR_START - 1, -1))
 
-# INITIALIZE
+# INITIALISE
 if "current_year_index" not in st.session_state:
     st.session_state.current_year_index = 0
 if "reveal" not in st.session_state:
