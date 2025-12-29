@@ -1,6 +1,6 @@
 # Nostalgia Rewind
 
-Nostalgia Rewind is your time machine in a browser. Drop in your birth year (or any year 1985-2015) and watch the world reassemble: the movies that ruled the box office, the songs stuck on repeat, the albums that owned the charts, the Oscar winners, and the headlines that defined the moment. Scroll through the years to see how culture evolves, then cap it off by blasting through ‘Tux in Space’ at the bottom of the page, because every rewind deserves a little arcade chaos.
+Nostalgia Rewind is your time machine in a browser. Drop in your birth year (or any year 1985-2015) and watch the world reassemble: the movies that ruled the box office, the songs stuck on repeat, the albums that owned the charts, the Oscar winners, and the headlines that defined the moment (all linked out so you can dive straight down memory lane). Scroll through the years to see how culture evolves, then cap it off by blasting through ‘Tux in Space’ at the bottom of the page, because every rewind deserves a little arcade chaos.
 
 ## Repo structure
 ```
