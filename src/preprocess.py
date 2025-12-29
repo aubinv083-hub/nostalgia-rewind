@@ -1,8 +1,47 @@
 from pathlib import Path
 from typing import Optional
 import pandas as pd
+import requests
 
 from config import RAW_DIR
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+}
+
+
+def resolve_film_wiki_url(title: str, year: int) -> str:
+    """
+    Try film-specific Wikipedia URLs in order, falling back to the generic title.
+    Accepts the first non-missing page.
+    """
+    base_title = title.replace(" ", "_")
+    candidates = [
+        f"https://en.wikipedia.org/wiki/{base_title}_({year}_film)",
+        f"https://en.wikipedia.org/wiki/{base_title}_(film)",
+        f"https://en.wikipedia.org/wiki/{base_title}",
+    ]
+    for url in candidates:
+        try:
+            resp = requests.get(url, timeout=5, allow_redirects=True, headers=HEADERS)
+            if resp.status_code == 403:
+                return url
+            if resp.status_code != 200:
+                continue
+            html = resp.text
+            final = resp.url.lower()
+            if "wikipedia does not have an article with this exact name" in html:
+                continue
+            if "may refer to" in html.lower():
+                continue
+            if f"({year}_film)" in final or "_(film)" in final:
+                return resp.url
+            if resp.url.rstrip("/") == url.rstrip("/"):
+                return resp.url
+        except Exception:
+            continue
+    return candidates[-1]
+
 
 def clean_awards(input_path: Optional[str | Path] = None) -> pd.DataFrame:
     """
@@ -36,7 +75,13 @@ def clean_awards(input_path: Optional[str | Path] = None) -> pd.DataFrame:
 
     mask_film = df["category"].str.contains("film", na=False)
     df.loc[mask_film, "winner"] = df.loc[mask_film, "winner"].str.split(" - ", n=1).str[0].str.strip()
-    
+
+    df["url"] = None
+    mask_best_film = df["category"] == "best film"
+    df.loc[mask_best_film, "url"] = df.loc[mask_best_film].apply(
+        lambda r: resolve_film_wiki_url(str(r["winner"]), int(r["year"])), axis=1
+    )
+
     return df
 
 
@@ -65,6 +110,8 @@ def clean_gross(input_path: Optional[str | Path] = None) -> pd.DataFrame:
     keep_col = ['rank', 'title', 'distributor', 'gross', 'year']
 
     df = df[keep_col].sort_values(by=["year", "rank"]).reset_index(drop=True)
+
+    df["url"] = df.apply(lambda r: resolve_film_wiki_url(r["title"], int(r["year"])), axis=1)
 
     return df
 

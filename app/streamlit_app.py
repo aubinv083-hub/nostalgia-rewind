@@ -161,9 +161,9 @@ if st.session_state.reveal:
                     gross_str = f"$ {pd.to_numeric(gross, errors='coerce'):,.0f}" if pd.notnull(
                         pd.to_numeric(gross, errors="coerce")) else ""
 
-                    # Create Wikipedia URL
-                    wiki_query = title.replace(" ", "_")
-                    url = f"https://en.wikipedia.org/wiki/{wiki_query}"
+                    url = row["url"] if "url" in row else None
+                    if pd.isna(url) or not url:
+                        url = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
 
                     html_table += f'<tr><td>{rank}</td><td><a href="{url}" target="_blank">{title}</a></td><td>{distributor}</td><td>{gross_str}</td></tr>'
 
@@ -217,11 +217,11 @@ if st.session_state.reveal:
             ]
 
         if not best_film_row.empty:
-            best_film = best_film_row.iloc[0]["winner"]
-
-            # Create Wikipedia URL for Best Film
-            wiki_query = best_film.replace(" ", "_")
-            url = f"https://en.wikipedia.org/wiki/{wiki_query}"
+            best_row = best_film_row.iloc[0]
+            best_film = best_row["winner"]
+            url = best_row["url"] if "url" in best_film_row.columns else None
+            if pd.isna(url) or not url:
+                url = f"https://en.wikipedia.org/wiki/{best_film.replace(' ', '_')}"
 
             st.markdown(
                 f"""
