@@ -111,6 +111,9 @@ pip install -r requirements.txt
 ```bash
 python run_all.py
 ```
+
+Note: The full pipeline can take up to 10 minutes to run.
+
 ### Docker
 Prerequisites: Docker Desktop installed and running <br>
 Docker Hub repository: https://hub.docker.com/r/noamlevillayer/nostalgia-rewind
